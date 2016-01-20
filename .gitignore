@@ -83,7 +83,7 @@ _settings.xml
 
 #binary file
 *.bin
-
+*.dsYM
 #max
 *.maxpat
 
