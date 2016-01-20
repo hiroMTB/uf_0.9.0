@@ -38,7 +38,7 @@ LIB_PATH_SNDFILE = $(CINDER_PATH)/blocks/libsndfile
 LDFLAG_SNDFILE = -lsndfile
 
 // libmtb
-HEADER_MTB = $(CINDER_PATH)/blocks/libmtb
+HEADER_MTB = $(CINDER_PATH)/blocks/libmtb_0.9.6
 
 // TBB
 HEADER_TBB = $(CINDER_PATH)/blocks/tbb/include
