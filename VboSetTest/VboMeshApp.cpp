@@ -11,6 +11,8 @@
 #include "cinder/ImageIo.h"
 #include "cinder/CameraUi.h"
 
+#include "Exporter.h"
+
 using namespace ci;
 using namespace ci::app;
 
@@ -30,10 +32,16 @@ class VboMeshApp : public App {
 	
 	CameraPersp		mCamera;
 	CameraUi		mCamUi;
+    Exporter mExp;
 };
 
 void VboMeshApp::setup()
 {
+    
+    mExp.setup(1080*3, 1920, 0, 100-1, GL_RGB, mt::getRenderPath(), 0, "test" );
+    setWindowSize( 1080*3/2, 1920/2 );
+    setWindowPos(0, 0);
+    
 	auto plane = geom::Plane().size( vec2( 20, 20 ) ).subdivisions( ivec2( 200, 50 ) );
 
 	vector<gl::VboMesh::Layout> bufferLayout = {
@@ -42,16 +50,17 @@ void VboMeshApp::setup()
 	};
 
 	mVboMesh = gl::VboMesh::create( plane, bufferLayout );
-
 	mTexture = gl::Texture::create( loadImage( loadFile( "../cinder_logo.png" ) ), gl::Texture::Format().loadTopDown() );
-	
-	mCamUi = CameraUi( &mCamera, getWindow() );
-}
+    mCamUi = CameraUi( &mCamera, getWindow() );
 
-void VboMeshApp::keyDown( KeyEvent event )
-{
-	if( event.getChar() == 'w' )
-		gl::setWireframeEnabled( ! gl::isWireframeEnabled() );
+    auto mappedPosAttrib = mVboMesh->mapAttrib3f( geom::Attrib::POSITION, false );
+    for( int i = 0; i < mVboMesh->getNumVertices(); i++ ) {
+        vec3 &pos = *mappedPosAttrib;
+        mappedPosAttrib->x *= 100;
+        mappedPosAttrib->y *= 100.0;
+        mappedPosAttrib->z *= 100.0;
+        ++mappedPosAttrib;
+    }
 }
 
 void VboMeshApp::update()
@@ -61,7 +70,8 @@ void VboMeshApp::update()
 	auto mappedPosAttrib = mVboMesh->mapAttrib3f( geom::Attrib::POSITION, false );
 	for( int i = 0; i < mVboMesh->getNumVertices(); i++ ) {
 		vec3 &pos = *mappedPosAttrib;
-		mappedPosAttrib->y = sinf( pos.x * 1.1467f + offset ) * 0.323f + cosf( pos.z * 0.7325f + offset ) * 0.431f;
+		mappedPosAttrib->y = sinf( pos.x*0.005 * 1.1467f + offset ) * 0.323f + cosf( pos.z*0.005 * 0.7325f + offset ) * 0.431f;
+        mappedPosAttrib->y *= 100.0;
 		++mappedPosAttrib;
 	}
 	mappedPosAttrib.unmap();
@@ -69,15 +79,37 @@ void VboMeshApp::update()
 
 void VboMeshApp::draw()
 {
-	gl::clear( Color( 0.15f, 0.15f, 0.15f ) );
+    mExp.begin( mCamera );
+    
+    gl::clear( Color(1,1,1) );
+    gl::color(1,0,0);
 
-	gl::setMatrices( mCamera );
+    //gl::translate(1080*3/2, 1920/2);
+    //gl::drawSolidCircle( vec2(0,0), 100);
 
-	gl::ScopedGlslProg glslScope( gl::getStockShader( gl::ShaderDef().texture() ) );
-	gl::ScopedTextureBind texScope( mTexture );
+    gl::scale(0.01, 0.01, 0.01);
+    {
+        gl::ScopedGlslProg glslScope( gl::getStockShader( gl::ShaderDef().texture() ) );
+        gl::ScopedTextureBind texScope( mTexture );
+        gl::draw( mVboMesh );
+    }
 
-	gl::draw( mVboMesh );
+    mExp.end();
+    mExp.draw();
 }
 
 
-CINDER_APP( VboMeshApp, RendererGl( RendererGl::Options().msaa( 16 ) ) )
+void VboMeshApp::keyDown( KeyEvent event )
+{
+    if( event.getChar() == 'w' ){
+        
+        gl::setWireframeEnabled( ! gl::isWireframeEnabled() );
+        
+    }else if( event.getChar() == 's' ){
+        mExp.snapShot();
+        writeImage(mt::getRenderPath()/"test.png", copyWindowSurface() );
+    }
+}
+
+
+CINDER_APP( VboMeshApp, RendererGl( RendererGl::Options().msaa( 0 ) ) )
