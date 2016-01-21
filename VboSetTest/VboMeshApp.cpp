@@ -10,8 +10,10 @@
 #include "cinder/GeomIO.h"
 #include "cinder/ImageIo.h"
 #include "cinder/CameraUi.h"
+#include "cinder/Rand.h"
 
 #include "Exporter.h"
+#include "VboSet.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -23,91 +25,73 @@ class VboMeshApp : public App {
 	void	setup() override;
 	void	update() override;
 	void	draw() override;
-
 	void	keyDown( KeyEvent event ) override;
 
-  private:
+    bool bShader = true;
 	gl::VboMeshRef	mVboMesh;
-	gl::TextureRef	mTexture;
-	
 	CameraPersp		mCamera;
 	CameraUi		mCamUi;
     Exporter mExp;
+    VboSet vbo;
 };
 
 void VboMeshApp::setup()
 {
-    
     mExp.setup(1080*3, 1920, 0, 100-1, GL_RGB, mt::getRenderPath(), 0, "test" );
     setWindowSize( 1080*3/2, 1920/2 );
     setWindowPos(0, 0);
     
-	auto plane = geom::Plane().size( vec2( 20, 20 ) ).subdivisions( ivec2( 200, 50 ) );
+	auto plane = geom::Plane().size( vec2( 20, 20 ) ).subdivisions( ivec2( 2000, 1000 ) );
 
-	vector<gl::VboMesh::Layout> bufferLayout = {
-		gl::VboMesh::Layout().usage( GL_DYNAMIC_DRAW ).attrib( geom::Attrib::POSITION, 3 ),
-		gl::VboMesh::Layout().usage( GL_STATIC_DRAW ).attrib( geom::Attrib::TEX_COORD_0, 2 )
-	};
-
-	mVboMesh = gl::VboMesh::create( plane, bufferLayout );
-	mTexture = gl::Texture::create( loadImage( loadFile( "../cinder_logo.png" ) ), gl::Texture::Format().loadTopDown() );
     mCamUi = CameraUi( &mCamera, getWindow() );
 
-    auto mappedPosAttrib = mVboMesh->mapAttrib3f( geom::Attrib::POSITION, false );
-    for( int i = 0; i < mVboMesh->getNumVertices(); i++ ) {
-        vec3 &pos = *mappedPosAttrib;
-        mappedPosAttrib->x *= 100;
-        mappedPosAttrib->y *= 100.0;
-        mappedPosAttrib->z *= 100.0;
-        ++mappedPosAttrib;
+    float w = 6000;
+    float h = 6000;
+    
+    for( int i=0;i<w; i++){
+        for( int j=0;j<h; j++){
+            vec3 v(i/w-0.5f, j/h-0.5f, randFloat()-0.5 );
+            vbo.addPos(v*5.0f);
+            vbo.addCol(ColorAf(randFloat(),randFloat(),randFloat(),1));
+        }
     }
+    
+    vbo.init( GL_POINTS );
 }
 
 void VboMeshApp::update()
 {
-	float offset = getElapsedSeconds() * 4.0f;
-
-	auto mappedPosAttrib = mVboMesh->mapAttrib3f( geom::Attrib::POSITION, false );
-	for( int i = 0; i < mVboMesh->getNumVertices(); i++ ) {
-		vec3 &pos = *mappedPosAttrib;
-		mappedPosAttrib->y = sinf( pos.x*0.005 * 1.1467f + offset ) * 0.323f + cosf( pos.z*0.005 * 0.7325f + offset ) * 0.431f;
-        mappedPosAttrib->y *= 100.0;
-		++mappedPosAttrib;
-	}
-	mappedPosAttrib.unmap();
 }
-
-void VboMeshApp::draw()
+ void VboMeshApp::draw()
 {
     mExp.begin( mCamera );
-    
-    gl::clear( Color(1,1,1) );
+    gl::clear( Color(0.5,0.5,0.5) );
     gl::color(1,0,0);
-
-    //gl::translate(1080*3/2, 1920/2);
-    //gl::drawSolidCircle( vec2(0,0), 100);
-
-    gl::scale(0.01, 0.01, 0.01);
-    {
-        gl::ScopedGlslProg glslScope( gl::getStockShader( gl::ShaderDef().texture() ) );
-        gl::ScopedTextureBind texScope( mTexture );
-        gl::draw( mVboMesh );
-    }
-
+    bShader ? vbo.drawShader() : vbo.draw();
     mExp.end();
     mExp.draw();
+    
+    gl::color(1, 1, 1);
+    gl::drawString("fps " + to_string(getAverageFps()), vec2(20,20) );
 }
 
 
 void VboMeshApp::keyDown( KeyEvent event )
 {
-    if( event.getChar() == 'w' ){
-        
-        gl::setWireframeEnabled( ! gl::isWireframeEnabled() );
-        
-    }else if( event.getChar() == 's' ){
-        mExp.snapShot();
-        writeImage(mt::getRenderPath()/"test.png", copyWindowSurface() );
+
+    switch( event.getChar() ){
+        case 'w':
+            gl::setWireframeEnabled( ! gl::isWireframeEnabled() );
+            break;
+            
+        case 's':
+            mExp.snapShot();
+            writeImage(mt::getRenderPath()/"test.png", copyWindowSurface() );
+            break;
+            
+        case 't':
+            bShader = !bShader;
+            break;
     }
 }
 

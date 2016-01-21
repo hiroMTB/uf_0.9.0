@@ -39,22 +39,17 @@
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		4D8D28B41C503E4600AF9DBE /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		4D8D28B51C503E4600AF9DBE /* AudioOutput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioOutput.h; sourceTree = "<group>"; };
-		4D8D28B61C503E4600AF9DBE /* Axis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Axis.h; sourceTree = "<group>"; };
 		4D8D28B71C503E4600AF9DBE /* ConsoleColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConsoleColor.h; sourceTree = "<group>"; };
 		4D8D28B81C503E4600AF9DBE /* ContourMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ContourMap.cpp; sourceTree = "<group>"; };
 		4D8D28B91C503E4600AF9DBE /* ContourMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContourMap.h; sourceTree = "<group>"; };
 		4D8D28BA1C503E4600AF9DBE /* CsoundOp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CsoundOp.h; sourceTree = "<group>"; };
-		4D8D28BB1C503E4600AF9DBE /* DataGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataGroup.h; sourceTree = "<group>"; };
 		4D8D28BC1C503E4600AF9DBE /* Exporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Exporter.h; sourceTree = "<group>"; };
 		4D8D28BD1C503E4600AF9DBE /* FftWaveWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FftWaveWriter.h; sourceTree = "<group>"; };
 		4D8D28BE1C503E4600AF9DBE /* MonitorNodeNL.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MonitorNodeNL.cpp; sourceTree = "<group>"; };
 		4D8D28BF1C503E4600AF9DBE /* MonitorNodeNL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MonitorNodeNL.h; sourceTree = "<group>"; };
 		4D8D28C01C503E4600AF9DBE /* mtSvg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mtSvg.h; sourceTree = "<group>"; };
 		4D8D28C11C503E4600AF9DBE /* mtUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mtUtil.h; sourceTree = "<group>"; };
-		4D8D28C21C503E4600AF9DBE /* MyCamera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MyCamera.cpp; sourceTree = "<group>"; };
-		4D8D28C31C503E4600AF9DBE /* MyCamera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyCamera.h; sourceTree = "<group>"; };
 		4D8D28C41C503E4600AF9DBE /* RfExporterBin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RfExporterBin.h; sourceTree = "<group>"; };
 		4D8D28C51C503E4600AF9DBE /* RfImporterBin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RfImporterBin.h; sourceTree = "<group>"; };
 		4D8D28C61C503E4600AF9DBE /* RfImporterRpc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RfImporterRpc.h; sourceTree = "<group>"; };
@@ -172,22 +167,17 @@
 		4D8D28B31C503E4600AF9DBE /* libmtb_0.9.0 */ = {
 			isa = PBXGroup;
 			children = (
-				4D8D28B41C503E4600AF9DBE /* .gitignore */,
 				4D8D28B51C503E4600AF9DBE /* AudioOutput.h */,
-				4D8D28B61C503E4600AF9DBE /* Axis.h */,
 				4D8D28B71C503E4600AF9DBE /* ConsoleColor.h */,
 				4D8D28B81C503E4600AF9DBE /* ContourMap.cpp */,
 				4D8D28B91C503E4600AF9DBE /* ContourMap.h */,
 				4D8D28BA1C503E4600AF9DBE /* CsoundOp.h */,
-				4D8D28BB1C503E4600AF9DBE /* DataGroup.h */,
 				4D8D28BC1C503E4600AF9DBE /* Exporter.h */,
 				4D8D28BD1C503E4600AF9DBE /* FftWaveWriter.h */,
 				4D8D28BE1C503E4600AF9DBE /* MonitorNodeNL.cpp */,
 				4D8D28BF1C503E4600AF9DBE /* MonitorNodeNL.h */,
 				4D8D28C01C503E4600AF9DBE /* mtSvg.h */,
 				4D8D28C11C503E4600AF9DBE /* mtUtil.h */,
-				4D8D28C21C503E4600AF9DBE /* MyCamera.cpp */,
-				4D8D28C31C503E4600AF9DBE /* MyCamera.h */,
 				4D8D28C41C503E4600AF9DBE /* RfExporterBin.h */,
 				4D8D28C51C503E4600AF9DBE /* RfImporterBin.h */,
 				4D8D28C61C503E4600AF9DBE /* RfImporterRpc.h */,
@@ -293,8 +283,8 @@
 			baseConfigurationReference = 4DE8B5911C4D803800364042 /* release.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
-				DEAD_CODE_STRIPPING = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEAD_CODE_STRIPPING = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_FAST_MATH = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 3;
