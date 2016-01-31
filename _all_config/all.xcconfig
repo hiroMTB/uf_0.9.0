@@ -7,8 +7,8 @@
 CINDER_PATH = ../..
 HEADER_CINDER = $(CINDER_PATH)/include
 LIB_PATH_CINDER = $(CINDER_PATH)/lib $(CINDER_PATH)/lib/macosx
-LDFLAG_CINDER_D = -lcinder_d
-LDFLAG_CINDER_R = -lcinder
+LDFLAG_CINDER_D = -lcinder_d -lz
+LDFLAG_CINDER_R = -lcinder -lz
 
 // boost
 HEADER_BOOST = $(CINDER_PATH)/boost
@@ -25,6 +25,12 @@ LDFLAG_CAIRO = -lcairo -lpixman-1 -lpng16
 HEADER_CV = $(CINDER_PATH)/blocks/OpenCV/include/opencv2 $(CINDER_PATH)/blocks/OpenCV/include
 LIB_PATH_CV = $(CINDER_PATH)/blocks/OpenCV/lib/macosx/
 LDFLAG_CV = -lopencv_calib3d -lopencv_contrib -lopencv_core -lopencv_features2d -lopencv_flann -lopencv_gpu -lopencv_imgproc -lopencv_legacy -lopencv_ml -lopencv_nonfree -lopencv_objdetect -opencv_ocl -lopencv_photo -lopencv_stitching -lopencv_superres -lopencv_ts -lopencv_video -lopencv_videostab
+
+HEADER_CV3 = $(CINDER_PATH)/blocks/Cinder-OpenCV3/include
+LIB_PATH_CV3 = $(CINDER_PATH)/blocks/Cinder-OpenCV3/lib/macosx/
+//LDFLAG_CV3 = -lippicv -lopencv_calib3d -lopencv_core -lopencv_features2d -lopencv_flann -lopencv_hal -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_ml -lopencv_objdetect -lopencv_photo -lopencv_shape -lopencv_stitching -lopencv_superres -lopencv_ts -lopencv_video -lopencv_videoio -lopencv_videostab
+
+LDFLAG_CV3 = -lippicv -lopencv_core -lopencv_hal -lopencv_imgproc
 
 // CSound
 HEADER_CSOUND = /Library/Frameworks/CsoundLib64.framework/Headers
@@ -46,7 +52,7 @@ LIB_PATH_TBB = $(CINDER_PATH)/blocks/tbb/lib/libc++
 LDFLAG_TBB = -ltbb
 
 // DEFAULT
-HEADER_DEF = $(HEADER_CINDER) $(HEADER_BOOST) $(HEADER_CV) $(HEADER_MTB) // $(HEADER_CAIRO)
-LIB_PATHS_DEF = $(LIB_PATH_CINDER) $(LIB_PATH_CV) // $(LIB_PATH_CAIRO)
-LDFLAG_DEF_D = $(LDFLAG_CINDER_D) $(LDFLAG_CV) //$(LDFLAG_CAIRO)
-LDFLAG_DEF_R = $(LDFLAG_CINDER_R) $(LDFLAG_CV) //$(LDFLAG_CAIRO)
+HEADER_DEF = $(HEADER_CINDER) $(HEADER_BOOST) $(HEADER_CV3) $(HEADER_MTB)
+LIB_PATH_DEF = $(LIB_PATH_CINDER) $(LIB_PATH_CV3)
+LDFLAG_DEF_D = $(LDFLAG_CINDER_D) $(LDFLAG_CV3)
+LDFLAG_DEF_R = $(LDFLAG_CINDER_R) $(LDFLAG_CV3)
