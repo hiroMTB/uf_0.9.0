@@ -82,12 +82,11 @@ void cApp::setup(){
 
 void cApp::make_data(){
     
-    int nd = 1'000'000;
+    int nd = 100'000;
     for( int i=0; i<nd; i++){
-        float n = mPln.noise(1.0+i*0.01f) * 100.0f;
+        float n = mPln.noise(0.31+i*2.99f) * 100.0f;
         float r = randFloat(-10.0f, 10.0f);
-        float d = n+r;
-        //d = abs(d);
+        float d = n + r + 10.0f;
         data.push_back( d );
     }
 
@@ -98,7 +97,7 @@ void cApp::make_data(){
         float x = (float)i/nd*100.0f;
         float y = d;
         dot.addPos( vec3( y, x, 0) );
-        dot.addCol( Colorf(0,0,0) );
+        dot.addCol( ColorAf(0,0,0, 0.7) );
     }
     
     dot.init(GL_POINTS);
@@ -221,18 +220,18 @@ void cApp::calc_histo_manual(){
     float yscale = 100 * 5;
     
     vector<int> mHisto;
-    mHisto.assign(200, 0);
+    mHisto.assign(1000, 0);
     
     for( int i=0; i<data.size(); i++){
         float d = data[i];
-        mHisto[round(d)+100] += 1;
+        mHisto[round(d)+500] += 1;
     }
     
     for( int i=0; i<mHisto.size(); i++){
         float h = mHisto[i] /(float)data.size() * yscale;
 
-        hisline2.addPos( vec3(i-100, 0, 5) );
-        hisline2.addPos( vec3(i-100, -h, 5) );
+        hisline2.addPos( vec3(i-500, 0, 5) );
+        hisline2.addPos( vec3(i-500, -h, 5) );
         hisline2.addCol( Colorf(0,0,1) );
         hisline2.addCol( Colorf(0,0,1) );
     }
@@ -257,7 +256,7 @@ void cApp::calc_quantile(){
     qlines.addPos( vec3(q025, y+h, z) );
     qlines.addCol( Colorf(0.1, 0, 0.1) );
     qlines.addCol( Colorf(0.1, 0, 0.1) );
-    
+
     qlines.addPos( vec3(q050, y, z) );
     qlines.addPos( vec3(q050, y+h, z) );
     qlines.addCol( Colorf(0.1, 0, 0.1) );
@@ -273,6 +272,15 @@ void cApp::calc_quantile(){
     qlines.addPos( vec3(q075, y+h/2, z) );
     qlines.addCol( Colorf(0.1, 0, 0.1) );
     qlines.addCol( Colorf(0.1, 0, 0.1) );
+    
+    float step = 0.01;
+    for( float q=step; q<1.0f; q+=step){
+        float qval = quantile(acc, quantile_probability = q );
+        qlines.addPos( vec3(qval, y-h, z) );
+        qlines.addPos( vec3(qval, y-h*1.5, z) );
+        qlines.addCol( Colorf(0.1, 0, 0.1) );
+        qlines.addCol( Colorf(0.1, 0, 0.1) );
+    }
 
     qlines.init(GL_LINES);
 }
@@ -295,20 +303,19 @@ void cApp::draw(){
     {
         //gl::translate( -getWindowWidth()/4, -getWindowHeight()/4, 0 );
         gl::translate( 0, -getWindowHeight()/4, 0 );
-        gl::scale(10,6,1);
+        gl::scale(8,8,1);
         
         mt::drawCoordinate(100);
 
-        glPointSize(1);
+        gl::pointSize(1);
         dot.draw();
         
-        glLineWidth(1);
+        gl::lineWidth(1);
         hisline.draw();
         hisline2.draw();
 
-        glLineWidth(10);
-        
-        gl::translate( 0, -30, 0);
+        gl::lineWidth(2);
+        gl::translate( 0, -20, 0);
         lines.draw();
 
         gl::translate( 0, -5, 0);
