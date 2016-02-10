@@ -28,9 +28,9 @@ LDFLAG_CV = -lopencv_calib3d -lopencv_contrib -lopencv_core -lopencv_features2d 
 
 HEADER_CV3 = $(CINDER_PATH)/blocks/Cinder-OpenCV3/include
 LIB_PATH_CV3 = $(CINDER_PATH)/blocks/Cinder-OpenCV3/lib/macosx/
-//LDFLAG_CV3 = -lippicv -lopencv_calib3d -lopencv_core -lopencv_features2d -lopencv_flann -lopencv_hal -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_ml -lopencv_objdetect -lopencv_photo -lopencv_shape -lopencv_stitching -lopencv_superres -lopencv_ts -lopencv_video -lopencv_videoio -lopencv_videostab
+LDFLAG_CV3 = -lippicv -lopencv_calib3d -lopencv_core -lopencv_features2d -lopencv_flann -lopencv_hal -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_ml -lopencv_objdetect -lopencv_photo -lopencv_shape -lopencv_stitching -lopencv_superres -lopencv_ts -lopencv_video -lopencv_videoio -lopencv_videostab
 
-LDFLAG_CV3 = -lippicv -lopencv_core -lopencv_hal -lopencv_imgproc
+//LDFLAG_CV3 = -lippicv -lopencv_core -lopencv_hal -lopencv_imgproc -lopencv_features2d
 
 // CSound
 HEADER_CSOUND = /Library/Frameworks/CsoundLib64.framework/Headers
