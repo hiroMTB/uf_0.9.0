@@ -68,7 +68,7 @@ public:
     VboSet vbo_ptcl;
     
     gl::VboMeshRef bridge;
-    int idump = 24 - 50;
+    int idump = 24 - 50 -12;
     
     bool bStart = false;
 
