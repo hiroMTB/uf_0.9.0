@@ -1,0 +1,6 @@
+#include "../../_all_config/all.xcconfig"
+
+HEADER_SEARCH_PATHS = $(HEADER_DEF)
+LIBRARY_SEARCH_PATHS = $(LIB_PATH_DEF)
+OTHER_LDFLAGS = $(LDFLAG_DEF_R)
+
