@@ -2,14 +2,14 @@
 <gui_setting>
 	<main>
 		<simType>0</simType>
-		<frame>124</frame>
+		<frame>100</frame>
 		<ortho>0</ortho>
 		<xyz_global_scale>1.000000</xyz_global_scale>
 		<r_resolution>1287</r_resolution>
 		<theta_resolution>1000</theta_resolution>
 	</main>
 	<rho>
-		<show>0</show>
+		<show>1</show>
 		<polar>0</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
 		<in_min>-0.168915</in_min>
@@ -20,26 +20,26 @@
 		<z_offset>0.000000</z_offset>
 		<xy_scale>300.000000</xy_scale>
 		<log>1</log>
-		<visible_rate>4.544134</visible_rate>
-		<num_particle>58483</num_particle>
+		<visible_rate>4.919736</visible_rate>
+		<num_particle>63317</num_particle>
 	</rho>
 	<vx>
 		<show>1</show>
 		<polar>0</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>-2.010000</in_min>
-		<in_max>2.830000</in_max>
-		<z_extrude>188.000000</z_extrude>
+		<in_min>-2.656681</in_min>
+		<in_max>3.406519</in_max>
+		<z_extrude>100.000000</z_extrude>
 		<x_offset>-750.000000</x_offset>
 		<y_offset>-600.000000</y_offset>
 		<z_offset>0.000000</z_offset>
 		<xy_scale>300.000000</xy_scale>
-		<log>1</log>
-		<visible_rate>24.983994</visible_rate>
-		<num_particle>321544</num_particle>
+		<log>0</log>
+		<visible_rate>5.801709</visible_rate>
+		<num_particle>74668</num_particle>
 	</vx>
 	<vy>
-		<show>0</show>
+		<show>1</show>
 		<polar>0</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
 		<in_min>0.096802</in_min>
@@ -50,11 +50,11 @@
 		<z_offset>0.000000</z_offset>
 		<xy_scale>300.000000</xy_scale>
 		<log>0</log>
-		<visible_rate>2.972183</visible_rate>
-		<num_particle>38252</num_particle>
+		<visible_rate>2.555245</visible_rate>
+		<num_particle>32886</num_particle>
 	</vy>
 	<S>
-		<show>0</show>
+		<show>1</show>
 		<polar>0</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
 		<in_min>-2.677985</in_min>
@@ -65,11 +65,11 @@
 		<z_offset>0.000000</z_offset>
 		<xy_scale>300.000000</xy_scale>
 		<log>0</log>
-		<visible_rate>5.763015</visible_rate>
-		<num_particle>74170</num_particle>
+		<visible_rate>5.644600</visible_rate>
+		<num_particle>72646</num_particle>
 	</S>
 	<P>
-		<show>0</show>
+		<show>1</show>
 		<polar>0</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
 		<in_min>0.890348</in_min>
@@ -80,11 +80,11 @@
 		<z_offset>0.000000</z_offset>
 		<xy_scale>300.000000</xy_scale>
 		<log>0</log>
-		<visible_rate>4.248252</visible_rate>
-		<num_particle>54675</num_particle>
+		<visible_rate>4.528594</visible_rate>
+		<num_particle>58283</num_particle>
 	</P>
 	<c>
-		<show>0</show>
+		<show>1</show>
 		<polar>0</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
 		<in_min>0.224836</in_min>
@@ -95,8 +95,8 @@
 		<z_offset>0.000000</z_offset>
 		<xy_scale>300.000000</xy_scale>
 		<log>1</log>
-		<visible_rate>5.674515</visible_rate>
-		<num_particle>73031</num_particle>
+		<visible_rate>5.937141</visible_rate>
+		<num_particle>76411</num_particle>
 	</c>
 </gui_setting>
 

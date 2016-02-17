@@ -16,6 +16,8 @@
 #include "Exporter.h"
 #include "Ramses.h"
 #include "mtUtil.h"
+#include "SoundWriter.h"
+#include "Dft.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -36,6 +38,11 @@ public:
     void saveXml();
     void loadXml();
     
+    void proc_idft();
+    void write_audio();
+    
+    const int outSamplingRate = 48000*4;
+    
     CameraUi camUi;
     Perlin mPln;
     Exporter mExp;
@@ -45,16 +52,18 @@ public:
     bool bOrtho = false;
     int eSimType = 0;
     int frame = 100;
-
+    
+    bool bZsort = false;
+    
     params::InterfaceGlRef gui;
     CameraPersp cam;
+    
+    vector<vector<float>> wavData;
+
 };
 
 void cApp::setup(){
     setWindowPos( 0, 0 );
-    
-    //float w = 1080*3;
-    //float h = 1920;
 
     float w = 1920;
     float h = 1080;
@@ -62,7 +71,7 @@ void cApp::setup(){
     setWindowSize( w, h );
     mExp.setup( w, h, 0, 3000, GL_RGB, mt::getRenderPath(), 0);
     
-    cam = CameraPersp(w, h, 55.0f, 0.1, 1000000 );
+    cam = CameraPersp(w, h, 55.0f, 1, 100000 );
     cam.lookAt( vec3(0,0,800), vec3(0,0,0) );
     cam.setLensShift( 0,0 );
     camUi.setCamera( &cam );
@@ -76,6 +85,8 @@ void cApp::setup(){
     }
 
     makeGui();
+    
+    wavData.assign(6, vector<float>() );
     
 #ifdef RENDER
     mExp.startRender();
@@ -122,6 +133,7 @@ void cApp::makeGui(){
     gui->addParam("theta(y) resolution", &Ramses::boxely, true );
     gui->addButton("save XML", sx );
     gui->addButton("load XML", ld );
+    gui->addButton("Write Audio", [this](){ write_audio(); } );
     
     gui->addSeparator();
     
@@ -141,6 +153,7 @@ void cApp::makeGui(){
         
         gui->addParam(p+" show", &rms[i].bShow ).group(p).updateFn(up2);
         gui->addParam(p+" polar coordinate", &rms[i].bPolar ).group(p).updateFn(up2);
+        
         gui->addParam(p+" Auto Min Max", &rms[i].bAutoMinMax ).group(p).updateFn(up);
         gui->addParam(p+" in min", &rms[i].in_min).step(0.05f).group(p).updateFn(up);
         gui->addParam(p+" in max", &rms[i].in_max).step(0.05f).group(p).updateFn(up);
@@ -242,9 +255,104 @@ void cApp::update(){
     if( bStart ){
         for( int i=0; i<rms.size(); i++){
             if( rms[i].bShow ){
-                rms[i].loadSimData( frame );
-                rms[i].updateVbo();
+                bool loadok = rms[i].loadSimData( frame );
+                if( loadok ){
+                    rms[i].updateVbo();
+                }else{
+                    write_audio();
+                    exit(1);
+                }                    
             }
+        }
+        
+        proc_idft();
+    }
+}
+
+
+void cApp::proc_idft(){
+    
+    fs::path dir = mt::getRenderPath();
+    
+    for( int i=0; i<rms.size(); i++){
+        
+        const Ramses & rm = rms[i];
+        
+        if( rm.bShow ){
+            
+            vector<vec3> pos = rm.pos;
+            
+            int dftSize = pos.size();
+            dftSize = Dft::findBiggestDftSize(dftSize*2);
+            
+            if(1){
+                audio::Buffer wave(dftSize);
+                float * f = wave.getChannel(0);
+                vector<float> freq = {4000.0f};
+                
+                for( int j=0; j<freq.size(); j++){
+                    float stepRad = freq[j]*2.0f*pi / (float)outSamplingRate;
+                    for( int i=0; i<wave.getSize(); i++){
+                        float s = sin( i * stepRad ) * 0.1f;
+                        f[i] += s;
+                    }
+                }
+                Dft dft;
+                audio::BufferSpectral spec = audio::BufferSpectral( dftSize );
+                dft.forward(&wave, &spec, dftSize );
+
+                audio::Buffer result_wave(dftSize);
+                dft.inverse(&spec, &result_wave, dftSize);
+                float * tmp = result_wave.getChannel(0);
+                wavData[i].insert(wavData[i].end(), tmp, tmp+result_wave.getNumFrames()/2-1 );
+            }
+            
+            else{
+                //
+                //  1. fill spectrum
+                //
+                audio::BufferSpectral spec(dftSize);
+                float * real = spec.getReal();
+                float * imag = spec.getImag();
+                
+                for( int j=0; j<spec.getNumFrames(); j++ ){
+                    vec3 p = pos[j];
+                    
+                    float prm = p.z;
+                    real[j] = p.x * prm * 400.0;
+                    imag[j] = p.y * prm * 400.0;
+                }
+                
+                //real[0] = 0;
+                //imag[0] = 0;
+                
+                Dft dft;
+                audio::Buffer result_wave(dftSize);
+                dft.inverse(&spec, &result_wave, dftSize);
+                
+                float * tmp = result_wave.getChannel(0);
+                wavData[i].insert(wavData[i].end(), tmp, tmp+result_wave.getNumFrames()/2-1 );
+            }
+            
+        }
+    }
+}
+
+void cApp::write_audio(){
+    
+    for( int i=0; i<wavData.size(); i++ ){
+        const vector<float> & w = wavData[i];
+
+        if( w.size() > 0){
+
+            string zs = bZsort ? "_zsort" : "";
+            string log = rms[i].eStretch==0 ? "_linear" : "_log";
+            
+            fs::path path = "7.1_idft_" + Ramses::prm[i] + log + zs + ".wav";
+            cout << "start writting Wav file : " << path.filename() << endl;
+            
+            SoundWriter sw;
+            sw.writeWav24f( w, 1, outSamplingRate, w.size(), path.string() );
         }
     }
 }
