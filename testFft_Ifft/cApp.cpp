@@ -69,8 +69,8 @@ void cApp::setup(){
     cam.setLensShift( 0,0 );
     camUi.setCamera( &cam );
     
-//    fftCheck();
-    dftCheck();
+    fftCheck();
+//    dftCheck();
 }
 
 void cApp::dftCheck(){

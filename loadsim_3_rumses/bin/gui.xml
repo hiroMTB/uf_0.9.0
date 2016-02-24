@@ -2,7 +2,7 @@
 <gui_setting>
 	<main>
 		<simType>0</simType>
-		<frame>124</frame>
+		<frame>100</frame>
 		<ortho>0</ortho>
 		<xyz_global_scale>1.000000</xyz_global_scale>
 		<r_resolution>1287</r_resolution>
@@ -10,93 +10,93 @@
 	</main>
 	<rho>
 		<show>0</show>
-		<polar>0</polar>
+		<polar>1</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
 		<in_min>-0.168915</in_min>
 		<in_max>2.457458</in_max>
 		<z_extrude>100.000000</z_extrude>
-		<x_offset>-1250.000000</x_offset>
-		<y_offset>-600.000000</y_offset>
+		<x_offset>0.000000</x_offset>
+		<y_offset>0.000000</y_offset>
 		<z_offset>0.000000</z_offset>
 		<xy_scale>300.000000</xy_scale>
 		<log>1</log>
-		<visible_rate>4.544134</visible_rate>
-		<num_particle>58483</num_particle>
+		<visible_rate>4.919736</visible_rate>
+		<num_particle>63317</num_particle>
 	</rho>
 	<vx>
-		<show>1</show>
-		<polar>0</polar>
+		<show>0</show>
+		<polar>1</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>-2.010000</in_min>
-		<in_max>2.830000</in_max>
-		<z_extrude>188.000000</z_extrude>
-		<x_offset>-750.000000</x_offset>
-		<y_offset>-600.000000</y_offset>
+		<in_min>-3.256681</in_min>
+		<in_max>0.256519</in_max>
+		<z_extrude>64.000000</z_extrude>
+		<x_offset>0.000000</x_offset>
+		<y_offset>0.000000</y_offset>
 		<z_offset>0.000000</z_offset>
 		<xy_scale>300.000000</xy_scale>
 		<log>1</log>
-		<visible_rate>24.983994</visible_rate>
-		<num_particle>321544</num_particle>
+		<visible_rate>5.167754</visible_rate>
+		<num_particle>66509</num_particle>
 	</vx>
 	<vy>
 		<show>0</show>
-		<polar>0</polar>
+		<polar>1</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>0.096802</in_min>
-		<in_max>4.280421</in_max>
-		<z_extrude>100.000000</z_extrude>
-		<x_offset>-250.000000</x_offset>
-		<y_offset>-600.000000</y_offset>
+		<in_min>-12.924266</in_min>
+		<in_max>0.782651</in_max>
+		<z_extrude>37.000000</z_extrude>
+		<x_offset>0.000000</x_offset>
+		<y_offset>0.000000</y_offset>
 		<z_offset>0.000000</z_offset>
 		<xy_scale>300.000000</xy_scale>
-		<log>0</log>
-		<visible_rate>2.972183</visible_rate>
-		<num_particle>38252</num_particle>
+		<log>1</log>
+		<visible_rate>6.277855</visible_rate>
+		<num_particle>80796</num_particle>
 	</vy>
 	<S>
-		<show>0</show>
-		<polar>0</polar>
+		<show>1</show>
+		<polar>1</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>-2.677985</in_min>
-		<in_max>0.672768</in_max>
+		<in_min>-1.677985</in_min>
+		<in_max>0.272768</in_max>
 		<z_extrude>100.000000</z_extrude>
-		<x_offset>250.000000</x_offset>
-		<y_offset>-600.000000</y_offset>
+		<x_offset>0.000000</x_offset>
+		<y_offset>0.000000</y_offset>
 		<z_offset>0.000000</z_offset>
 		<xy_scale>300.000000</xy_scale>
-		<log>0</log>
-		<visible_rate>5.763015</visible_rate>
-		<num_particle>74170</num_particle>
+		<log>1</log>
+		<visible_rate>5.533721</visible_rate>
+		<num_particle>71219</num_particle>
 	</S>
 	<P>
 		<show>0</show>
-		<polar>0</polar>
+		<polar>1</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
 		<in_min>0.890348</in_min>
 		<in_max>40.250000</in_max>
 		<z_extrude>100.000000</z_extrude>
-		<x_offset>750.000000</x_offset>
-		<y_offset>-600.000000</y_offset>
+		<x_offset>0.000000</x_offset>
+		<y_offset>0.000000</y_offset>
 		<z_offset>0.000000</z_offset>
 		<xy_scale>300.000000</xy_scale>
 		<log>0</log>
-		<visible_rate>4.248252</visible_rate>
-		<num_particle>54675</num_particle>
+		<visible_rate>4.528594</visible_rate>
+		<num_particle>58283</num_particle>
 	</P>
 	<c>
 		<show>0</show>
-		<polar>0</polar>
+		<polar>1</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
 		<in_min>0.224836</in_min>
-		<in_max>0.650000</in_max>
+		<in_max>0.645069</in_max>
 		<z_extrude>100.000000</z_extrude>
-		<x_offset>1250.000000</x_offset>
-		<y_offset>-600.000000</y_offset>
+		<x_offset>0.000000</x_offset>
+		<y_offset>0.000000</y_offset>
 		<z_offset>0.000000</z_offset>
 		<xy_scale>300.000000</xy_scale>
 		<log>1</log>
-		<visible_rate>5.674515</visible_rate>
-		<num_particle>73031</num_particle>
+		<visible_rate>5.937141</visible_rate>
+		<num_particle>76411</num_particle>
 	</c>
 </gui_setting>
 

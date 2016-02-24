@@ -53,14 +53,14 @@ public:
 void cApp::setup(){
     setWindowPos( 0, 0 );
     
-    //float w = 1080*3;
-    //float h = 1920;
+    float w = 1080*3;
+    float h = 1920;
 
-    float w = 1920;
-    float h = 1080;
+//    float w = 1920;
+//    float h = 1080;
     
-    setWindowSize( w, h );
-    mExp.setup( w, h, 0, 3000, GL_RGB, mt::getRenderPath(), 0);
+    setWindowSize( w*0.65f, h*0.65f );
+    mExp.setup( w, h, 0, 1000, GL_RGB, mt::getRenderPath(), 0);
     
     cam = CameraPersp(w, h, 55.0f, 0.1, 1000000 );
     cam.lookAt( vec3(0,0,800), vec3(0,0,0) );
@@ -260,6 +260,8 @@ void cApp::draw(){
         gl::clear();    
         gl::enableDepthRead();
         gl::enableDepthWrite();
+        
+        gl::enableAdditiveBlending();
         
         if( !mExp.bRender && !mExp.bSnap ){
             mt::drawCoordinate(10);
