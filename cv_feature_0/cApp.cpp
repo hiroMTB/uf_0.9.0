@@ -55,21 +55,22 @@ class cApp : public App {
 };
 
 void cApp::setup(){
-    int w = 1080*3;
-    int h = 1920;
-    
-    mExp.setup( w, h, 0, 1000-1, GL_RGB, mt::getRenderPath(), 0 );
-    setWindowSize( w*0.5, h*0.5 );
-    setWindowPos(0, 0);
     
     mPln.setSeed( 345 );
     mPln.setOctaves( 4 );
     
+    openDir();
+    
+    fs::path path = dir/("f_00000.png");
+    sur = Surface8u( loadImage( path) );
+    int w = sur.getWidth();
+    int h = sur.getHeight();
+    
     pcam = CameraPersp(w, h, 50, 1, 10000);
     camUi.setCamera( &pcam );
-    
-    //open();
-    openDir();
+    mExp.setup( w, h, 0, 3000-1, GL_RGB, mt::getRenderPath(), 0 );
+    setWindowSize( w*0.5, h*0.5 );
+    setWindowPos(0, 0);
     
     
 #ifdef RENDER
@@ -92,54 +93,85 @@ void cApp::makeFeature(){
     fst << setfill('0') << setw(5) << frame;
     fs::path path = dir/("f_" + fst.str() + ".png");
     sur = Surface8u( loadImage( path) );
-    cv::Mat input( toOcv(sur) );
-    cv::blur(input, input, cv::Size(3,3) );
     
-    //cv::cvtColor( input, input, CV_RGB2GRAY );
-    //cv::equalizeHist(input, input);
-    //cv::Canny( input, input, 10, 10, 3, false);
+    cv::Mat input( toOcv(sur) );
+    //cv::blur(input, input, cv::Size(3,3) );
+    
+    cv::cvtColor( input, input, CV_RGB2GRAY );
+    cv::equalizeHist(input, input);
+    cv::Canny( input, input, 10, 10, 3, false);
     //sur = fromOcv( input );
     
     //auto detector = cv::BRISK::create(10, 1, 1.f);
-    auto detector = cv::ORB::create(5000, 1.2f, 16, 0, 0, 4);
+    auto detector = cv::ORB::create(100, 1.2f, 16, 0, 0, 4);
     //auto detector = cv::MSER::create( 5, 60, 14400);
     //auto detector = cv::FastFeatureDetector::create( 30, true, cv::FastFeatureDetector::TYPE_9_16 );
     detector->detect( input, key );
     
     {
-        int num_line = 8;
-        int num_dupl = 1;
-        int size = key.size();
-        float nlimit = 5;
-        float flimit = 250*2;
-
         vbo.resetPos();
         vbo.resetCol();
         vbo.resetVbo();
         
         for( int i=0; i<key.size(); i++ ){
             cv::Point2f & p = key[i].pt;
-            float size = key[i].size;
-            vec2 n = mPln.dfBm(p.x, p.y) * 0.1f;
             vbo.addPos( vec3(p.x, p.y, 0) );
-            vbo.addCol( ColorAf(0.1+n.x,0.1+n.y,0.3,0.3+size*0.005f));
+            
+            const ColorAf & c = sur.getPixel(vec2(p.x, p.y) );
+            vbo.addCol( ColorAf( 0.8f-c.r*1.2f,0.8f-c.g*1.2f,0.8f-c.b*1.2, 0.3));
         }
         vbo.init( GL_POINTS );
+
+        if(0){
+            nline.resetPos();
+            nline.resetCol();
+            nline.resetVbo();
+            
+            const vector<vec3> & inpos = vbo.getPos();
+            const vector<ColorAf> & incol = vbo.getCol();
+            
+            for( int i=0; i<5000; i++){
+                
+                int id1 = randInt(0,inpos.size());
+                int id2 = randInt(0,inpos.size());
+                const vec3 &p1 = inpos[id1];
+                const vec3 &p2 = inpos[id2];
+                
+                float dist = glm::distance(p1, p2);
+                if( 10<dist && dist<1300){
+                    const ColorAf &c1 = incol[id1];
+                    const ColorAf &c2 = incol[id2];
+                    nline.addPos(p1);
+                    nline.addPos(p2);
+                    nline.addCol(c1);
+                    nline.addCol(c2);
+                }
+            }
+            
+            nline.init(GL_LINES);
+        }
         
-        const vector<vec3> & inpos = vbo.getPos();
-        const vector<ColorAf> & incol = vbo.getCol();
-        
-        vector<vec3> outpos( size*(num_line*num_dupl)*2 );
-        vector<ColorAf> outcol( size*(num_line*num_dupl)*2 );
-        TbbNpFinder np;
-        np.findNearestPoints(&inpos[0], &outpos[0], &incol[0], &outcol[0], size, num_line, num_dupl, nlimit, flimit);
-        
-        nline.resetPos();
-        nline.resetCol();
-        nline.resetVbo();
-        nline.addPos(outpos);
-        nline.addCol(outcol);
-        nline.init(GL_LINES);
+        if(1){
+            int num_line = 3;
+            int num_dupl = 1;
+            int size = key.size();
+            float nlimit = 10;
+            float flimit = 1000/2;
+            const vector<vec3> & inpos = vbo.getPos();
+            const vector<ColorAf> & incol = vbo.getCol();
+            
+            vector<vec3> outpos( size*(num_line*num_dupl)*2 );
+            vector<ColorAf> outcol( size*(num_line*num_dupl)*2 );
+            TbbNpFinder np;
+            np.findNearestPoints(&inpos[0], &outpos[0], &incol[0], &outcol[0], size, num_line, num_dupl, nlimit, flimit);
+            
+            nline.resetPos();
+            nline.resetCol();
+            nline.resetVbo();
+            nline.addPos(outpos);
+            nline.addCol(outcol);
+            nline.init(GL_LINES);
+        }
     }
     
 }
@@ -150,21 +182,20 @@ void cApp::update(){
 
 void cApp::draw(){
     
-    gl::pointSize(1);
-    gl::lineWidth(1);
-    gl::enableAlphaBlending();
-    
     //gl::setMatrices( camUi.getCamera() );
     mExp.begin( camUi.getCamera() );
     {
         gl::clear( Color(0,0,0) );
+        gl::pointSize(1);
+        gl::lineWidth(1);
+        gl::enableAlphaBlending();
 
-        //gl::color(1,1,1);
+        gl::color(1,1,1);
         gl::TextureRef tex = gl::Texture::create( sur );
         gl::draw( tex );
         
         // feature key point
-        gl::enableAdditiveBlending();
+        //gl::enableAdditiveBlending();
         nline.draw();
         vbo.draw();
     }

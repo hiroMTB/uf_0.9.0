@@ -9,94 +9,94 @@
 		<theta_resolution>1000</theta_resolution>
 	</main>
 	<rho>
-		<show>1</show>
+		<show>0</show>
 		<polar>1</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>-0.270000</in_min>
-		<in_max>2.007458</in_max>
-		<z_extrude>500.000000</z_extrude>
+		<in_min>-0.168915</in_min>
+		<in_max>2.457458</in_max>
+		<z_extrude>100.000000</z_extrude>
 		<x_offset>0.000000</x_offset>
 		<y_offset>0.000000</y_offset>
 		<z_offset>0.000000</z_offset>
-		<xy_scale>114.000000</xy_scale>
+		<xy_scale>300.000000</xy_scale>
 		<log>1</log>
-		<inAngle>0.000000</inAngle>
-		<outAngle>180.000000</outAngle>
+		<visible_rate>4.919736</visible_rate>
+		<num_particle>63317</num_particle>
 	</rho>
 	<vx>
 		<show>0</show>
 		<polar>1</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>-1.537947</in_min>
-		<in_max>-0.001562</in_max>
-		<z_extrude>200.000000</z_extrude>
+		<in_min>-3.256681</in_min>
+		<in_max>0.256519</in_max>
+		<z_extrude>64.000000</z_extrude>
 		<x_offset>0.000000</x_offset>
 		<y_offset>0.000000</y_offset>
 		<z_offset>0.000000</z_offset>
-		<xy_scale>345.000000</xy_scale>
+		<xy_scale>300.000000</xy_scale>
 		<log>1</log>
-		<inAngle>90.000000</inAngle>
-		<outAngle>180.000000</outAngle>
+		<visible_rate>5.167754</visible_rate>
+		<num_particle>66509</num_particle>
 	</vx>
 	<vy>
 		<show>0</show>
 		<polar>1</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>-9.000000</in_min>
-		<in_max>3.000000</in_max>
-		<z_extrude>200.000000</z_extrude>
+		<in_min>-12.924266</in_min>
+		<in_max>0.782651</in_max>
+		<z_extrude>37.000000</z_extrude>
 		<x_offset>0.000000</x_offset>
 		<y_offset>0.000000</y_offset>
 		<z_offset>0.000000</z_offset>
-		<xy_scale>100.000000</xy_scale>
+		<xy_scale>300.000000</xy_scale>
 		<log>1</log>
-		<inAngle>0.000000</inAngle>
-		<outAngle>0.000000</outAngle>
+		<visible_rate>6.277855</visible_rate>
+		<num_particle>80796</num_particle>
 	</vy>
 	<S>
-		<show>0</show>
-		<polar>1</polar>
-		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>-0.577985</in_min>
-		<in_max>0.822768</in_max>
-		<z_extrude>297.000000</z_extrude>
-		<x_offset>0.000000</x_offset>
-		<y_offset>0.000000</y_offset>
-		<z_offset>0.000000</z_offset>
-		<xy_scale>157.000000</xy_scale>
-		<log>1</log>
-		<inAngle>-90.000000</inAngle>
-		<outAngle>0.000000</outAngle>
-	</S>
-	<P>
 		<show>1</show>
 		<polar>1</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>-0.244182</in_min>
-		<in_max>1.762780</in_max>
-		<z_extrude>461.000000</z_extrude>
+		<in_min>-1.677985</in_min>
+		<in_max>0.272768</in_max>
+		<z_extrude>100.000000</z_extrude>
 		<x_offset>0.000000</x_offset>
 		<y_offset>0.000000</y_offset>
 		<z_offset>0.000000</z_offset>
-		<xy_scale>81.000000</xy_scale>
+		<xy_scale>300.000000</xy_scale>
 		<log>1</log>
-		<inAngle>-180.000000</inAngle>
-		<outAngle>0.000000</outAngle>
+		<visible_rate>5.533721</visible_rate>
+		<num_particle>71219</num_particle>
+	</S>
+	<P>
+		<show>0</show>
+		<polar>1</polar>
+		<Auto_Min_Max>0</Auto_Min_Max>
+		<in_min>0.890348</in_min>
+		<in_max>40.250000</in_max>
+		<z_extrude>100.000000</z_extrude>
+		<x_offset>0.000000</x_offset>
+		<y_offset>0.000000</y_offset>
+		<z_offset>0.000000</z_offset>
+		<xy_scale>300.000000</xy_scale>
+		<log>0</log>
+		<visible_rate>4.528594</visible_rate>
+		<num_particle>58283</num_particle>
 	</P>
 	<c>
 		<show>0</show>
 		<polar>1</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>2.343704</in_min>
-		<in_max>4.610000</in_max>
-		<z_extrude>199.000000</z_extrude>
+		<in_min>0.224836</in_min>
+		<in_max>0.645069</in_max>
+		<z_extrude>100.000000</z_extrude>
 		<x_offset>0.000000</x_offset>
 		<y_offset>0.000000</y_offset>
 		<z_offset>0.000000</z_offset>
-		<xy_scale>317.000000</xy_scale>
-		<log>0</log>
-		<inAngle>-90.000000</inAngle>
-		<outAngle>0.000000</outAngle>
+		<xy_scale>300.000000</xy_scale>
+		<log>1</log>
+		<visible_rate>5.937141</visible_rate>
+		<num_particle>76411</num_particle>
 	</c>
 </gui_setting>
 

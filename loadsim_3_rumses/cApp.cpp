@@ -48,18 +48,17 @@ public:
 
     params::InterfaceGlRef gui;
     CameraPersp cam;
+    
+    int resolution = 1;
 };
 
 void cApp::setup(){
     setWindowPos( 0, 0 );
     
-    float w = 1080*3;
-    float h = 1920;
-
-//    float w = 1920;
-//    float h = 1080;
+    float w = 1920;
+    float h = 1080;
     
-    setWindowSize( w*0.65f, h*0.65f );
+    setWindowSize( w, h );
     mExp.setup( w, h, 0, 1000, GL_RGB, mt::getRenderPath(), 0);
     
     cam = CameraPersp(w, h, 55.0f, 0.1, 1000000 );
@@ -88,14 +87,14 @@ void cApp::makeGui(){
     gui->setOptions( "", "position=`0 0` valueswidth=100" );
     
     function<void(void)> update = [&](){
-        for( int i=0; i<rms.size(); i++){ rms[i].updateVbo(); }
+        for( int i=0; i<rms.size(); i++){ rms[i].updateVbo(resolution); }
     };
     
     function<void(void)> changeSym = [this](){
         for( int i=0; i<rms.size(); i++){
             rms[i].eSimType = eSimType;
             rms[i].loadSimData(frame);
-            rms[i].updateVbo();
+            rms[i].updateVbo(resolution);
         }
     };
     
@@ -108,8 +107,13 @@ void cApp::makeGui(){
         for( int i=0; i<rms.size(); i++){
             rms[i].eSimType = eSimType;
             rms[i].loadSimData(frame);
-            rms[i].updateVbo();
+            rms[i].updateVbo(resolution);
         }
+    };
+    
+    function<void(void)> ren = [this](){
+        bStart = true;
+        mExp.startRender();
     };
     
     gui->addText( "main" );
@@ -122,6 +126,7 @@ void cApp::makeGui(){
     gui->addParam("theta(y) resolution", &Ramses::boxely, true );
     gui->addButton("save XML", sx );
     gui->addButton("load XML", ld );
+    gui->addButton("start render", ren );
     
     gui->addSeparator();
     
@@ -131,12 +136,12 @@ void cApp::makeGui(){
         
         //function<void(void)> up = bind(&Ramses::updateVbo, &rms[i]);
         function<void(void)> up = [i, this](){
-            rms[i].updateVbo();
+            rms[i].updateVbo(resolution);
         };
         
         function<void(void)> up2 = [i, this](){
             rms[i].loadSimData(this->frame);
-            rms[i].updateVbo();
+            rms[i].updateVbo(resolution);
         };
         
         gui->addParam(p+" show", &rms[i].bShow ).group(p).updateFn(up2);
@@ -153,10 +158,13 @@ void cApp::makeGui(){
         gui->addParam(p+" xy scale", &rms[i].scale).step(1.0f).group(p).updateFn(up);
         //gui->addParam(p+" visible thresh", &rms[i].visible_thresh).step(0.005f).min(0.0f).max(1.0f).group(p).updateFn(up);
         gui->addParam(p+" log", &rms[i].eStretch).step(1).min(0).max(1).group(p).updateFn(up2);
+
+        gui->addParam(p+" inAngle", &rms[i].inAngle).step(1).min(-180).max(180).group(p).updateFn(up);
+        gui->addParam(p+" outAngle", &rms[i].outAngle).step(1).min(-180).max(180).group(p).updateFn(up);
         
         // read only
-        gui->addParam(p+" visible rate(%)", &rms[i].visible_rate, true ).group(p);
-        gui->addParam(p+" num particle", &rms[i].nParticle, true).group(p);
+        //gui->addParam(p+" visible rate(%)", &rms[i].visible_rate, true ).group(p);
+        //gui->addParam(p+" num particle", &rms[i].nParticle, true).group(p);
         
         gui->addSeparator();
     }
@@ -191,8 +199,8 @@ void cApp::loadXml(){
             r.zoffset = (prm/"z_offset").getValue<float>();
             r.scale = (prm/"xy_scale").getValue<float>();
             r.eStretch = (prm/"log").getValue<float>();
-            r.visible_rate = (prm/"visible_rate").getValue<float>();
-            r.nParticle = (prm/"num_particle").getValue<int>();
+            r.inAngle = (prm/"inAngle").getValue<float>();
+            r.outAngle = (prm/"outAngle").getValue<float>();
         }
     }
 }
@@ -228,8 +236,9 @@ void cApp::saveXml(){
         prm.push_back( XmlTree("z_offset", to_string(r.zoffset)));
         prm.push_back( XmlTree("xy_scale", to_string( r.scale )));
         prm.push_back( XmlTree("log", to_string( r.eStretch )));
-        prm.push_back( XmlTree("visible_rate", to_string( r.visible_rate )));
-        prm.push_back( XmlTree("num_particle", to_string( r.nParticle )));
+        prm.push_back( XmlTree("inAngle", to_string(r.inAngle)));
+        prm.push_back( XmlTree("outAngle", to_string(r.outAngle)));
+        
         xml.push_back( prm );
     }
     
@@ -243,7 +252,7 @@ void cApp::update(){
         for( int i=0; i<rms.size(); i++){
             if( rms[i].bShow ){
                 rms[i].loadSimData( frame );
-                rms[i].updateVbo();
+                rms[i].updateVbo(resolution);
             }
         }
     }

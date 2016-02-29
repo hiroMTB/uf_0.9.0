@@ -69,9 +69,13 @@ public:
     int boxelx, boxely, boxelz;
     int scanY = 0;
     int scanZ = 0;
-    int speed =  16; // 25 ystep
-    int speedZ = 20; // 20 zstep
-    int frame = 0;
+    int scanZoffset = 65;
+    
+    float speed =  6.4;
+    int speedZ = 20;
+    
+    const int frameOffset = 63;
+    int frame = frameOffset;
 
     // rotation settings
     float angle1 = 90;
@@ -93,28 +97,37 @@ public:
     Perlin mPln;
     
     Exporter mExp;
-    Exporter mExpScan;
+    Exporter mExpScanFace;
+    Exporter mExpScanLine;
     
     VboSet vbo_ptcl;
+    VboSet vScanFace;
     VboSet vScanLine;
+    
+    vector<float> hist;
+    Surface8u sur;
 };
 
 void cApp::setup(){
     setWindowPos( 0, 0 );
     
     if(1){
-        setWindowSize( 1920, 1080 );
+#ifdef RENDER
+        setWindowSize( 1920*0.2, 1080*0.2 );
+#else
+        setWindowSize( 1920, 1080);
+#endif
         mExp.setup( 1920, 1080, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "3d/3d_");
-        mExpScan.setup( 1920, 1080, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "scan/scan_");
-
+        mExpScanFace.setup( 1920, 1080, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "scanFace/scanFace_");
+        mExpScanLine.setup( 1920, 1080, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "scanLine/scanLine_");
         cam = CameraPersp(1920, 1080, fov, 1, 100000 );
         eye = vec3(0,0,800);
         cam.lookAt( eye, vec3(0,0,0) );
         camUi.setCamera( &cam );
     }else{
-        setWindowSize( 1080*3*0.5, 1920*0.5 );
+        setWindowSize( 1080*3*0.2, 1920*0.2 );
         mExp.setup( 1080*3, 1920, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "3d/3d_");
-        if(bDrawScan)mExpScan.setup( 1080*3, 1920, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "scan/scan_");
+        if(bDrawScan)mExpScanFace.setup( 1080*3, 1920, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "scan/scan_");
         cam = CameraPersp(1080*3, 1920, fov, 1, 100000 );
         eye = vec3(0,0,200);
         cam.lookAt( eye, vec3(0,0,0) );
@@ -130,11 +143,13 @@ void cApp::setup(){
     
     //loadSimulationData( 24 );
     
-    
 #ifdef RENDER
     bStart = true;
-    mExp.startRender();
-    if(bDrawScan)mExpScan.startRender();
+    //mExp.startRender();
+    if(bDrawScan){
+        mExpScanFace.startRender();
+        mExpScanLine.startRender();
+    }
     
 #endif
 }
@@ -166,20 +181,21 @@ void cApp::setupGui(){
 
 void cApp::update(){
     
-    scanZ = (frame*speed)/400.1f;
+    scanZ = (frame*speed)/401.0f;
     scanZ *= speedZ;
     scanZ += speedZ;
+    scanZ += scanZoffset;
     
     bScanDir = (scanZ/speedZ)%2==1;
     
     if (bScanDir) {
-        scanY = (frame*speed)%401;
+        scanY = fmodf(frame*speed,401);
     }else{
-        scanY = 400 - ((frame*speed)%401);
+        scanY = 400 - fmodf(frame*speed,401.0f);
     }
     
-    idump = frame+25;
-    angle2 = angleSpd2*(frame+25);
+    idump = (frame-frameOffset)+25;
+    angle2 = angleSpd2*(frame-frameOffset+25);
     
     if( bStart ){
         
@@ -187,9 +203,15 @@ void cApp::update(){
         vbo_ptcl.resetCol();
         vbo_ptcl.resetVbo();
         
+        vScanFace.resetPos();
+        vScanFace.resetCol();
+        vScanFace.resetVbo();
+        
         vScanLine.resetPos();
         vScanLine.resetCol();
         vScanLine.resetVbo();
+        hist.clear();
+        hist.assign(1080/2, 0.0f);
         
         loadSimulationData( idump );
         makeVbo();
@@ -241,9 +263,11 @@ void cApp::makeVbo(){
 
         float tz = 399-z;
         
+        bool bColored = scanZ-speedZ<=tz && tz<=scanZ;
+        
         if( scanZ < tz ){
             return;
-        }else if(scanZ-speedZ<=tz && tz<=scanZ){
+        }else if( bColored ){
             if( bScanDir ){
                 if(scanY < y) return;
             }else{
@@ -271,8 +295,10 @@ void cApp::makeVbo(){
             
             float intst = lmap(rhof, threshold, 1.0f, 0.1f, 0.9f);
             
+            //bool bColored = tz>=scanZ-speedZ;
+            
             ColorAf c;
-            if( tz>=scanZ-speedZ ){
+            if( bColored ){
                 c = ColorAf(0.1+intst,0,0,0.1f+intst);
             }else{
                 c = ColorAf(intst, intst, intst, 0.1f+intst);
@@ -284,8 +310,7 @@ void cApp::makeVbo(){
             p.dist = glm::distance(eye, vr);
             tp.push_back( p );
             
-            //
-            if( bDrawScan && tz==scanZ ){
+            if( bDrawScan && bColored ){
                 c = ColorAf(intst, intst, intst, 0.1f+intst);
                 Particle ps;
                 ps.pos = v;
@@ -293,19 +318,32 @@ void cApp::makeVbo(){
                 ps.dist = glm::distance(eye, vr);
                 tp_s.push_back(ps);
             }
+            
+            // Scan Line, histogram
+//            if( bDrawScan && bColored ){
+//                bool bOnLine = (y==scanY);
+//                if(bOnLine){
+//                    int data = round( lmap(rhof, threshold, 1.0f, 0.0f, 1080.0f/2.0f-1.0f) );
+//                    hist[data]++;
+//                }
+//            }
+        }
+        
+        if( bDrawScan && bColored ){
+            bool bOnLine = (y==scanY);
+            if(bOnLine){
+                int data = round( lmap(rhof, 0.0f, 1.0f, 0.0f, 1080.0f/2.0f-1.0f) );
+                hist[data]++;
+            }
         }
     };
 
     if( 1 ){
         parallel_for( blocked_range<size_t>(0,rho.size()), [&](const blocked_range<size_t> r){
-            for( int i=r.begin(); i!=r.end(); i++){
-                func(i);
-            }
-        } );
+            for( int i=r.begin(); i!=r.end(); i++){ func(i); }
+        });
     }else{
-        for( int i=0; i<rho.size(); i++){
-            func(i);
-        }
+        for( int i=0; i<rho.size(); i++){ func(i); }
     }
 
 
@@ -313,12 +351,12 @@ void cApp::makeVbo(){
     //  we need sort depends on position between eye and particle pos.
     //  otherwise point is rendered with dark color from behind.
     //
-    sort(
-         tp.begin(),
-         tp.end(),
-         []( const Particle& l, const Particle& r){
-             return l.dist > r.dist;
-         }
+    sort( tp.begin(), tp.end(),
+         []( const Particle& l, const Particle& r){ return l.dist > r.dist; }
+    );
+    
+    sort( tp_s.begin(), tp_s.end(),
+         []( const Particle& l, const Particle& r){ return l.pos.z> r.pos.z; }
     );
     
     //
@@ -337,11 +375,37 @@ void cApp::makeVbo(){
         if(bDrawScan){
             for( int i=0; i<tp_s.size(); i++){
                 Particle & p = tp_s[i];
-                vScanLine.addPos( p.pos );
-                vScanLine.addCol( p.col );
+                vScanFace.addPos( p.pos );
+                vScanFace.addCol( p.col );
             }
             
-            vScanLine.init(GL_POINTS);
+            vScanFace.init(GL_POINTS);
+        }
+
+        if(bDrawScan){
+            
+            sur = Surface8u(1920, 1080, false);
+
+            // fill black
+            unsigned char * d = sur.getData();
+            for( int i=0; i<1920*1080; i++){
+                d[i*3+0] = 0;
+                d[i*3+1] = 0;
+                d[i*3+2] = 0;
+            }
+            
+            for( int i=0; i<hist.size(); i++){
+                
+                float x = (float)hist[i]/400.0f;
+                x *= 2500.0f;
+                int y = i*2;
+                
+                for( int j=0; j<x+1; j++){
+                    sur.setPixel(ivec2(j, y), ColorAf(1,1,1,1));
+                }
+            }
+            
+            vScanLine.init(GL_LINES);
         }
         
         int totalPoints = vbo_ptcl.getPos().size();
@@ -355,90 +419,104 @@ void cApp::draw(){
     
     angle2 = angleSpd2*idump;
     
-    if(1){
-        mExp.begin( camUi.getCamera() );
-        
-    }else{
-        
-        mExp.beginOrtho( true );
-        gl::scale(1.5,1.5,1.5);
-        float rad = atan(sqrt(2.0)/1.0);
-        gl::rotate(rad, 1, 0, 0);
-        gl::rotate(toRadians(45.0f), 0, 0, 1);
-    }
-    
-    {
-        gl::clear( ColorAf(0,0,0,1) );
-
-        gl::enableAlphaBlending();
-        gl::enableDepthRead();
-        gl::enableDepthWrite();
-    
-        glLineWidth( 1 );
-
-        glPointSize( 1 );
-        vbo_ptcl.draw();
-        
-        {
-            if(bRotate){
-                gl::rotate( toRadians(angle1), axis1 );
-                gl::rotate( toRadians(angle2), axis2 );
-            }
+    if(0){
+        if(1){
+            mExp.begin( camUi.getCamera() );
             
-            if( !mExp.bSnap && !mExp.bRender ){
-                mt::drawCoordinate( -200 );
-            }
+        }else{
+            
+            mExp.beginOrtho( true );
+            gl::scale(1.5,1.5,1.5);
+            float rad = atan(sqrt(2.0)/1.0);
+            gl::rotate(rad, 1, 0, 0);
+            gl::rotate(toRadians(45.0f), 0, 0, 1);
+        }
 
-            float w = 0.75f;
-            gl::color(w,w,w);
-            gl::drawStrokedCube( vec3(0,0,0), vec3(400,400,400) );
+        {
+            gl::clear( ColorAf(0,0,0,1) );
 
-            if( frame>0){
-                // draw scan line
-                float z = 200.0f-scanZ-1;
-                float y = -200.0f+scanY;
-                gl::translate(0,0, z);
-                gl::color(1, 0, 0, 0.8f);
-                gl::drawLine(vec2(-200, y), vec2(200, y));
+            gl::enableAlphaBlending();
+            gl::enableDepthRead();
+            gl::enableDepthWrite();
 
-                gl::color(1, 0, 0, 0.5f);
+            glLineWidth( 1 );
+
+            glPointSize( 1 );
+            vbo_ptcl.draw();
+            
+            {
+                if(bRotate){
+                    gl::rotate( toRadians(angle1), axis1 );
+                    gl::rotate( toRadians(angle2), axis2 );
+                }
                 
+                if( !mExp.bSnap && !mExp.bRender ){
+                    mt::drawCoordinate( -200 );
+                }
 
-                if(0){
-                    float sy = (bScanDir==true?-200:200);
-                    gl::drawStrokedRect( Rectf(vec2(-200,sy), vec2(200,y)));
-                    gl::translate(0,0,speedZ);
-                    gl::drawStrokedRect( Rectf(vec2(-200,sy), vec2(200,y)));
-                }else{
+                float w = 0.75f;
+                gl::color(w,w,w);
+                gl::drawStrokedCube( vec3(0,0,0), vec3(400,400,400) );
 
-                    float d = 400.0f;
-                    float w = bScanDir==true?scanY:400-scanY;
-                    float h = speedZ;
-                    float y = bScanDir==true?w/2-200:-w/2+200;
-                    gl::drawStrokedCube( vec3(0, y, speedZ/2), vec3(d,w,h) );
+                if( frame>0){
+                    // draw scan line
+                    float z = 200.0f-scanZ-1;
+                    float y = -200.0f+scanY;
+                    gl::translate(0,0, z);
+                    gl::color(1, 0, 0, 0.8f);
+                    gl::drawLine(vec2(-200, y), vec2(200, y));
 
+                    gl::color(1, 0, 0, 0.5f);
+                    
+
+                    if(0){
+                        float sy = (bScanDir==true?-200:200);
+                        gl::drawStrokedRect( Rectf(vec2(-200,sy), vec2(200,y)));
+                        gl::translate(0,0,speedZ);
+                        gl::drawStrokedRect( Rectf(vec2(-200,sy), vec2(200,y)));
+                    }else{
+
+                        float d = 400.0f;
+                        float w = bScanDir==true?scanY:400-scanY;
+                        float h = speedZ;
+                        float y = bScanDir==true?w/2-200:-w/2+200;
+                        gl::drawStrokedCube( vec3(0, y, speedZ/2), vec3(d,w,h) );
+
+                    }
                 }
             }
-        }
-        
-        gl::disableDepthWrite();
-        gl::disableDepthRead();
-        
-        
-    }mExp.end();
+            
+            gl::disableDepthWrite();
+            gl::disableDepthRead();
+            
+            
+        }mExp.end();
+    }
     
     if(bDrawScan){
-        mExpScan.beginOrtho(true, false);{
-            gl::clear();
-            gl::rotate(toRadians(-90.0f));
-            gl::rotate(toRadians(180.0f), 1, 0, 0);
-            //gl::scale(2.0,2.0,1);
-            //mt::drawCoordinate( -200 );
-            vScanLine.draw();
-            gl::translate(0.5, 0.5, 0);
-            vScanLine.draw();
+        if(1){
+            mExpScanFace.beginOrtho(true, false);{
+                gl::clear();
+                gl::rotate(toRadians(-90.0f));
+                gl::rotate(toRadians(180.0f), 1, 0, 0);
+                //gl::scale(2.0,2.0,1);
+                //mt::drawCoordinate( -200 );
+                vScanFace.draw();
+                gl::translate(0.5, 0.5, 0);
+                vScanFace.draw();
+            }
+            mExpScanFace.end();
         }
-        mExpScan.end();
+        
+        if(1){
+            mExpScanLine.beginOrtho( false, false );{
+                gl::clear();
+                gl::color(1, 1, 1);
+                gl::Texture2dRef tex = gl::Texture::create( sur );
+                gl::draw(tex);
+            }
+            mExpScanLine.end();
+        }
     }
     
     mExp.draw();
@@ -452,8 +530,9 @@ void cApp::keyDown( KeyEvent event ) {
     char key = event.getChar();
     switch (key) {
         case 's':{
-            mExp.snapShot("idump_"+toString(idump)+"_3d.png");
-            mExpScan.snapShot("idump_"+toString(idump)+"_scanFace.png");
+            mExp.snapShot("idump_"+toString(idump-1)+"_3d.png");
+            mExpScanFace.snapShot("idump_"+toString(idump-1)+"_scanFace.png");
+            mExpScanLine.snapShot("idump_"+toString(idump-1)+"_scanLine.png");
             break;
         }
         case ' ': bStart = !bStart; break;
