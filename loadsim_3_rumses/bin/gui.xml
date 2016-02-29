@@ -9,36 +9,91 @@
 		<theta_resolution>1000</theta_resolution>
 	</main>
 	<rho>
-		<show>1</show>
-		<polar>1</polar>
-		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>-0.270000</in_min>
-		<in_max>2.007458</in_max>
-		<z_extrude>500.000000</z_extrude>
-		<x_offset>0.000000</x_offset>
-		<y_offset>0.000000</y_offset>
-		<z_offset>0.000000</z_offset>
-		<xy_scale>114.000000</xy_scale>
-		<log>1</log>
-		<inAngle>0.000000</inAngle>
-		<outAngle>180.000000</outAngle>
-	</rho>
-	<vx>
 		<show>0</show>
 		<polar>1</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>-1.537947</in_min>
-		<in_max>-0.001562</in_max>
+		<in_min>-0.568915</in_min>
+		<in_max>2.007458</in_max>
 		<z_extrude>200.000000</z_extrude>
 		<x_offset>0.000000</x_offset>
 		<y_offset>0.000000</y_offset>
 		<z_offset>0.000000</z_offset>
-		<xy_scale>345.000000</xy_scale>
+		<xy_scale>100.000000</xy_scale>
 		<log>1</log>
-		<inAngle>90.000000</inAngle>
+		<inAngle>-180.000000</inAngle>
 		<outAngle>180.000000</outAngle>
+		<offsetRotateAngle>0.000000</offsetRotateAngle>
+		<rotateSpeed>-10.000000</rotateSpeed>
+	</rho>
+	<vx>
+		<show>1</show>
+		<polar>1</polar>
+		<Auto_Min_Max>0</Auto_Min_Max>
+		<in_min>-5.059047</in_min>
+		<in_max>0.244288</in_max>
+		<z_extrude>200.000000</z_extrude>
+		<x_offset>0.000000</x_offset>
+		<y_offset>0.000000</y_offset>
+		<z_offset>-120.000000</z_offset>
+		<xy_scale>100.000000</xy_scale>
+		<log>1</log>
+		<inAngle>-180.000000</inAngle>
+		<outAngle>180.000000</outAngle>
+		<offsetRotateAngle>0.000000</offsetRotateAngle>
+		<rotateSpeed>-13.600000</rotateSpeed>
 	</vx>
 	<vy>
+		<show>0</show>
+		<polar>1</polar>
+		<Auto_Min_Max>0</Auto_Min_Max>
+		<in_min>-2.772627</in_min>
+		<in_max>0.364011</in_max>
+		<z_extrude>160.000000</z_extrude>
+		<x_offset>0.000000</x_offset>
+		<y_offset>0.000000</y_offset>
+		<z_offset>-60.000000</z_offset>
+		<xy_scale>100.000000</xy_scale>
+		<log>1</log>
+		<inAngle>-180.000000</inAngle>
+		<outAngle>180.000000</outAngle>
+		<offsetRotateAngle>0.000000</offsetRotateAngle>
+		<rotateSpeed>-12.500000</rotateSpeed>
+	</vy>
+	<S>
+		<show>0</show>
+		<polar>1</polar>
+		<Auto_Min_Max>0</Auto_Min_Max>
+		<in_min>-5.012170</in_min>
+		<in_max>0.084725</in_max>
+		<z_extrude>200.000000</z_extrude>
+		<x_offset>0.000000</x_offset>
+		<y_offset>0.000000</y_offset>
+		<z_offset>-114.000000</z_offset>
+		<xy_scale>100.000000</xy_scale>
+		<log>1</log>
+		<inAngle>-180.000000</inAngle>
+		<outAngle>180.000000</outAngle>
+		<offsetRotateAngle>0.000000</offsetRotateAngle>
+		<rotateSpeed>-10.000000</rotateSpeed>
+	</S>
+	<P>
+		<show>0</show>
+		<polar>1</polar>
+		<Auto_Min_Max>0</Auto_Min_Max>
+		<in_min>-0.844182</in_min>
+		<in_max>3.270167</in_max>
+		<z_extrude>200.000000</z_extrude>
+		<x_offset>0.000000</x_offset>
+		<y_offset>0.000000</y_offset>
+		<z_offset>0.000000</z_offset>
+		<xy_scale>100.000000</xy_scale>
+		<log>1</log>
+		<inAngle>-180.000000</inAngle>
+		<outAngle>180.000000</outAngle>
+		<offsetRotateAngle>0.000000</offsetRotateAngle>
+		<rotateSpeed>0.000000</rotateSpeed>
+	</P>
+	<c>
 		<show>0</show>
 		<polar>1</polar>
 		<Auto_Min_Max>0</Auto_Min_Max>
@@ -50,53 +105,10 @@
 		<z_offset>0.000000</z_offset>
 		<xy_scale>100.000000</xy_scale>
 		<log>1</log>
-		<inAngle>0.000000</inAngle>
-		<outAngle>0.000000</outAngle>
-	</vy>
-	<S>
-		<show>0</show>
-		<polar>1</polar>
-		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>-0.577985</in_min>
-		<in_max>0.822768</in_max>
-		<z_extrude>297.000000</z_extrude>
-		<x_offset>0.000000</x_offset>
-		<y_offset>0.000000</y_offset>
-		<z_offset>0.000000</z_offset>
-		<xy_scale>157.000000</xy_scale>
-		<log>1</log>
-		<inAngle>-90.000000</inAngle>
-		<outAngle>0.000000</outAngle>
-	</S>
-	<P>
-		<show>1</show>
-		<polar>1</polar>
-		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>-0.244182</in_min>
-		<in_max>1.762780</in_max>
-		<z_extrude>461.000000</z_extrude>
-		<x_offset>0.000000</x_offset>
-		<y_offset>0.000000</y_offset>
-		<z_offset>0.000000</z_offset>
-		<xy_scale>81.000000</xy_scale>
-		<log>1</log>
 		<inAngle>-180.000000</inAngle>
-		<outAngle>0.000000</outAngle>
-	</P>
-	<c>
-		<show>0</show>
-		<polar>1</polar>
-		<Auto_Min_Max>0</Auto_Min_Max>
-		<in_min>2.343704</in_min>
-		<in_max>4.610000</in_max>
-		<z_extrude>199.000000</z_extrude>
-		<x_offset>0.000000</x_offset>
-		<y_offset>0.000000</y_offset>
-		<z_offset>0.000000</z_offset>
-		<xy_scale>317.000000</xy_scale>
-		<log>0</log>
-		<inAngle>-90.000000</inAngle>
-		<outAngle>0.000000</outAngle>
+		<outAngle>180.000000</outAngle>
+		<offsetRotateAngle>0.000000</offsetRotateAngle>
+		<rotateSpeed>0.000000</rotateSpeed>
 	</c>
 </gui_setting>
 

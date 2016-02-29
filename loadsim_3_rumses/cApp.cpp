@@ -43,6 +43,8 @@ public:
     vector<Ramses> rms;
     bool bStart = false;
     bool bOrtho = false;
+    bool bFall = true;
+
     int eSimType = 0;
     int frame = 100;
 
@@ -50,20 +52,36 @@ public:
     CameraPersp cam;
     
     int resolution = 1;
+    
 };
 
 void cApp::setup(){
     setWindowPos( 0, 0 );
     
     float w = 1920;
-    float h = 1080;
+    float h = 1080*3;
     
-    setWindowSize( w, h );
+    setWindowSize( w*0.3, h*0.3 );
     mExp.setup( w, h, 0, 1000, GL_RGB, mt::getRenderPath(), 0);
     
     cam = CameraPersp(w, h, 55.0f, 0.1, 1000000 );
-    cam.lookAt( vec3(0,0,800), vec3(0,0,0) );
-    cam.setLensShift( 0,0 );
+    
+    if(0){
+        
+        cam.lookAt( vec3(0,0,800), vec3(0,0,0) );
+        cam.setLensShift( 0,0 );
+    }else{
+        cam.setNearClip(0.100000);
+        cam.setFarClip(1000000.000000);
+        cam.setAspectRatio(0.592593);
+        cam.setFov(55.000000);
+        cam.setEyePoint(vec3(326.924622,-381.081604,259.431519));
+        cam.setWorldUp(vec3(0.000000,1.000000,0.000000));
+        cam.setLensShift(vec2(0.000000,0.000000));
+        cam.setViewDirection(vec3(-0.578462,0.674288,-0.459040));
+        cam.lookAt(vec3(326.924622,-381.081604,259.431519)+vec3(-0.578462,0.674288,-0.459040));
+    }
+    
     camUi.setCamera( &cam );
     
     mPln.setSeed(123);
@@ -80,6 +98,78 @@ void cApp::setup(){
     mExp.startRender();
 #endif
     
+}
+
+void cApp::update(){
+
+    if( !bStart ) return;
+    
+    if( bFall ){
+        
+        // move particle up/down
+        for( int i=0; i<rms.size(); i++){
+            Ramses & rm = rms[i];
+            rm.move();
+        }
+    
+    }else{
+        for( int i=0; i<rms.size(); i++){
+            if( rms[i].bShow ){
+                rms[i].loadSimData( frame );
+                rms[i].updateVbo(resolution);
+            }
+        }
+    }
+}
+
+void cApp::draw(){
+    
+    bOrtho ? mExp.beginOrtho( true ) : mExp.begin( camUi.getCamera() ); {
+        
+        gl::clear();    
+        gl::enableDepthRead();
+        gl::enableDepthWrite();
+        gl::enableAlphaBlending();
+        glPointSize(1);
+        glLineWidth(1);
+    
+        if( !mExp.bRender && !mExp.bSnap ){ mt::drawCoordinate(10); }
+        for( int i=0; i<rms.size(); i++){
+            rms[rms.size()-i-1].draw();
+        }
+        
+    }mExp.end();
+    
+    mExp.draw();
+    
+    if(gui) gui->draw();
+
+    if( bStart && !bFall )frame++;
+}
+
+void cApp::keyDown( KeyEvent event ) {
+    char key = event.getChar();
+    switch (key) {
+        case 'S': mExp.startRender();  break;
+        case 'T': mExp.stopRender();  break;
+        case 's': mExp.snapShot();  break;
+        case ' ': bStart = !bStart; break;
+        case 'c': mt::printCamera( camUi.getCamera() ); break;
+    }
+}
+
+void cApp::mouseDown( MouseEvent event ){
+    camUi.mouseDown( event.getPos() );
+}
+
+void cApp::mouseDrag( MouseEvent event ){
+    camUi.mouseDrag( event.getPos(), event.isLeftDown(), event.isMiddleDown(), event.isRightDown() );
+}
+
+void cApp::resize(){
+    CameraPersp & cam = const_cast<CameraPersp&>(camUi.getCamera());
+    cam.setAspectRatio( getWindowAspectRatio() );
+    camUi.setCamera( &cam );
 }
 
 void cApp::makeGui(){
@@ -158,9 +248,10 @@ void cApp::makeGui(){
         gui->addParam(p+" xy scale", &rms[i].scale).step(1.0f).group(p).updateFn(up);
         //gui->addParam(p+" visible thresh", &rms[i].visible_thresh).step(0.005f).min(0.0f).max(1.0f).group(p).updateFn(up);
         gui->addParam(p+" log", &rms[i].eStretch).step(1).min(0).max(1).group(p).updateFn(up2);
-
         gui->addParam(p+" inAngle", &rms[i].inAngle).step(1).min(-180).max(180).group(p).updateFn(up);
         gui->addParam(p+" outAngle", &rms[i].outAngle).step(1).min(-180).max(180).group(p).updateFn(up);
+        gui->addParam(p+" offsetRotateAngle", &rms[i].offsetRotateAngle).step(0.01).group(p).updateFn(up);
+        gui->addParam(p+" rotateSpeed", &rms[i].rotateSpeed).step(0.01).group(p).updateFn(up);
         
         // read only
         //gui->addParam(p+" visible rate(%)", &rms[i].visible_rate, true ).group(p);
@@ -201,12 +292,14 @@ void cApp::loadXml(){
             r.eStretch = (prm/"log").getValue<float>();
             r.inAngle = (prm/"inAngle").getValue<float>();
             r.outAngle = (prm/"outAngle").getValue<float>();
+            r.offsetRotateAngle = (prm/"offsetRotateAngle").getValue<float>();
+            r.rotateSpeed = (prm/"rotateSpeed").getValue<float>();
         }
     }
 }
 
 void cApp::saveXml(){
-
+    
     XmlTree xml, mn;
     xml.setTag("gui_setting");
     mn.setTag("main");
@@ -219,7 +312,7 @@ void cApp::saveXml(){
     mn.push_back( XmlTree("theta_resolution", to_string(Ramses::boxely) ));
     
     xml.push_back( mn );
-
+    
     for( int i=0; i<rms.size(); i++){
         Ramses & r = rms[i];
         string name = Ramses::prm[i];
@@ -238,81 +331,14 @@ void cApp::saveXml(){
         prm.push_back( XmlTree("log", to_string( r.eStretch )));
         prm.push_back( XmlTree("inAngle", to_string(r.inAngle)));
         prm.push_back( XmlTree("outAngle", to_string(r.outAngle)));
-        
+        prm.push_back( XmlTree("offsetRotateAngle", to_string(r.offsetRotateAngle)));
+        prm.push_back( XmlTree("rotateSpeed", to_string(r.rotateSpeed)));
         xml.push_back( prm );
     }
     
     DataTargetRef file = DataTargetPath::createRef( "gui.xml" );
     xml.write( file );
     
-}
-
-void cApp::update(){
-    if( bStart ){
-        for( int i=0; i<rms.size(); i++){
-            if( rms[i].bShow ){
-                rms[i].loadSimData( frame );
-                rms[i].updateVbo(resolution);
-            }
-        }
-    }
-}
-
-void cApp::draw(){
-    
-    gl::enableAlphaBlending();
-    glPointSize(1);
-    glLineWidth(1);
-    
-    bOrtho ? mExp.beginOrtho( true ) : mExp.begin( camUi.getCamera() ); {
-        
-        gl::clear();    
-        gl::enableDepthRead();
-        gl::enableDepthWrite();
-        
-        gl::enableAdditiveBlending();
-        
-        if( !mExp.bRender && !mExp.bSnap ){
-            mt::drawCoordinate(10);
-            //gl::drawLine( vec3(0,0,-500), vec3(0,0,500));
-            //gl::color(1, 0, 0);
-            //gl::drawStrokedCircle( Vec2i(0,0), 20);
-        }
-        
-        for( int i=0; i<rms.size(); i++){
-            rms[rms.size()-i-1].draw();
-        }
-    }mExp.end();
-    
-    mExp.draw();
-    
-    if(gui) gui->draw();
-
-    if( bStart)frame++;
-}
-
-void cApp::keyDown( KeyEvent event ) {
-    char key = event.getChar();
-    switch (key) {
-        case 'S': mExp.startRender();  break;
-        case 'T': mExp.stopRender();  break;
-        case 's': mExp.snapShot();  break;
-        case ' ': bStart = !bStart; break;
-    }
-}
-
-void cApp::mouseDown( MouseEvent event ){
-    camUi.mouseDown( event.getPos() );
-}
-
-void cApp::mouseDrag( MouseEvent event ){
-    camUi.mouseDrag( event.getPos(), event.isLeftDown(), event.isMiddleDown(), event.isRightDown() );
-}
-
-void cApp::resize(){
-    CameraPersp & cam = const_cast<CameraPersp&>(camUi.getCamera());
-    cam.setAspectRatio( getWindowAspectRatio() );
-    camUi.setCamera( &cam );
 }
 
 CINDER_APP( cApp, RendererGl( RendererGl::Options().msaa( 0 )) )

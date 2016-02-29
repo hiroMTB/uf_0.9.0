@@ -22,6 +22,38 @@
 		4D6AF8101C66082800D48A83 /* libtbb.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D6AF80E1C66081200D48A83 /* libtbb.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
+		8409B2801C84B64B004C02F2 /* cApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D6AF7EB1C66027700D48A83 /* cApp.cpp */; };
+		8409B2821C84B64B004C02F2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784AF0FF439BC000DE1D7 /* Accelerate.framework */; };
+		8409B2831C84B64B004C02F2 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6AF80C1C6607E000D48A83 /* QuickTime.framework */; };
+		8409B2841C84B64B004C02F2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6AF80A1C6607D400D48A83 /* Carbon.framework */; };
+		8409B2851C84B64B004C02F2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6AF8081C6607C700D48A83 /* AVFoundation.framework */; };
+		8409B2861C84B64B004C02F2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6AF8061C6607BF00D48A83 /* IOKit.framework */; };
+		8409B2871C84B64B004C02F2 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6AF8041C6607B500D48A83 /* IOSurface.framework */; };
+		8409B2881C84B64B004C02F2 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6AF8021C6607AD00D48A83 /* CoreMedia.framework */; };
+		8409B2891C84B64B004C02F2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		8409B28A1C84B64B004C02F2 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
+		8409B28B1C84B64B004C02F2 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
+		8409B28C1C84B64B004C02F2 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
+		8409B28D1C84B64B004C02F2 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
+		8409B28E1C84B64B004C02F2 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
+		8409B28F1C84B64B004C02F2 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
+		8409B2911C84B64B004C02F2 /* libtbb.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D6AF80E1C66081200D48A83 /* libtbb.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		8409B29B1C84B736004C02F2 /* cApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D6AF7EB1C66027700D48A83 /* cApp.cpp */; };
+		8409B29D1C84B736004C02F2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784AF0FF439BC000DE1D7 /* Accelerate.framework */; };
+		8409B29E1C84B736004C02F2 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6AF80C1C6607E000D48A83 /* QuickTime.framework */; };
+		8409B29F1C84B736004C02F2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6AF80A1C6607D400D48A83 /* Carbon.framework */; };
+		8409B2A01C84B736004C02F2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6AF8081C6607C700D48A83 /* AVFoundation.framework */; };
+		8409B2A11C84B736004C02F2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6AF8061C6607BF00D48A83 /* IOKit.framework */; };
+		8409B2A21C84B736004C02F2 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6AF8041C6607B500D48A83 /* IOSurface.framework */; };
+		8409B2A31C84B736004C02F2 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6AF8021C6607AD00D48A83 /* CoreMedia.framework */; };
+		8409B2A41C84B736004C02F2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		8409B2A51C84B736004C02F2 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
+		8409B2A61C84B736004C02F2 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
+		8409B2A71C84B736004C02F2 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
+		8409B2A81C84B736004C02F2 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
+		8409B2A91C84B736004C02F2 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
+		8409B2AA1C84B736004C02F2 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
+		8409B2AC1C84B736004C02F2 /* libtbb.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D6AF80E1C66081200D48A83 /* libtbb.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +65,26 @@
 			dstSubfolderSpec = 6;
 			files = (
 				4D6AF8101C66082800D48A83 /* libtbb.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8409B2901C84B64B004C02F2 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				8409B2911C84B64B004C02F2 /* libtbb.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8409B2AB1C84B736004C02F2 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				8409B2AC1C84B736004C02F2 /* libtbb.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,10 +131,56 @@
 		4D6AF80E1C66081200D48A83 /* libtbb.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtbb.dylib; path = "../../blocks/tbb/lib/libc++/libtbb.dylib"; sourceTree = "<group>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		5323E6B50EAFCA7E003A9687 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
+		8409B2961C84B64B004C02F2 /* loadsim_3_rumses copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "loadsim_3_rumses copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8409B2971C84B64B004C02F2 /* loadsim_3_rumses copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "loadsim_3_rumses copy-Info.plist"; path = "/Users/mtbret/Desktop/unfold/_code/cinder_0.9.0_unfold/_uf_0.9.0/loadsim_3_rumses/loadsim_3_rumses copy-Info.plist"; sourceTree = "<absolute>"; };
+		8409B2B11C84B736004C02F2 /* loadsim_3_rumses copy 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "loadsim_3_rumses copy 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8409B2B21C84B736004C02F2 /* loadsim_3_rumses copy 2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "loadsim_3_rumses copy 2-Info.plist"; path = "/Users/mtbret/Desktop/unfold/_code/cinder_0.9.0_unfold/_uf_0.9.0/loadsim_3_rumses/loadsim_3_rumses copy 2-Info.plist"; sourceTree = "<absolute>"; };
 		8D1107320486CEB800E47090 /* loadsim_3_rumses.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = loadsim_3_rumses.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		8409B2811C84B64B004C02F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8409B2821C84B64B004C02F2 /* Accelerate.framework in Frameworks */,
+				8409B2831C84B64B004C02F2 /* QuickTime.framework in Frameworks */,
+				8409B2841C84B64B004C02F2 /* Carbon.framework in Frameworks */,
+				8409B2851C84B64B004C02F2 /* AVFoundation.framework in Frameworks */,
+				8409B2861C84B64B004C02F2 /* IOKit.framework in Frameworks */,
+				8409B2871C84B64B004C02F2 /* IOSurface.framework in Frameworks */,
+				8409B2881C84B64B004C02F2 /* CoreMedia.framework in Frameworks */,
+				8409B2891C84B64B004C02F2 /* Cocoa.framework in Frameworks */,
+				8409B28A1C84B64B004C02F2 /* OpenGL.framework in Frameworks */,
+				8409B28B1C84B64B004C02F2 /* CoreVideo.framework in Frameworks */,
+				8409B28C1C84B64B004C02F2 /* QTKit.framework in Frameworks */,
+				8409B28D1C84B64B004C02F2 /* AudioToolbox.framework in Frameworks */,
+				8409B28E1C84B64B004C02F2 /* AudioUnit.framework in Frameworks */,
+				8409B28F1C84B64B004C02F2 /* CoreAudio.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8409B29C1C84B736004C02F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8409B29D1C84B736004C02F2 /* Accelerate.framework in Frameworks */,
+				8409B29E1C84B736004C02F2 /* QuickTime.framework in Frameworks */,
+				8409B29F1C84B736004C02F2 /* Carbon.framework in Frameworks */,
+				8409B2A01C84B736004C02F2 /* AVFoundation.framework in Frameworks */,
+				8409B2A11C84B736004C02F2 /* IOKit.framework in Frameworks */,
+				8409B2A21C84B736004C02F2 /* IOSurface.framework in Frameworks */,
+				8409B2A31C84B736004C02F2 /* CoreMedia.framework in Frameworks */,
+				8409B2A41C84B736004C02F2 /* Cocoa.framework in Frameworks */,
+				8409B2A51C84B736004C02F2 /* OpenGL.framework in Frameworks */,
+				8409B2A61C84B736004C02F2 /* CoreVideo.framework in Frameworks */,
+				8409B2A71C84B736004C02F2 /* QTKit.framework in Frameworks */,
+				8409B2A81C84B736004C02F2 /* AudioToolbox.framework in Frameworks */,
+				8409B2A91C84B736004C02F2 /* AudioUnit.framework in Frameworks */,
+				8409B2AA1C84B736004C02F2 /* CoreAudio.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D11072E0486CEB800E47090 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -143,6 +241,8 @@
 			isa = PBXGroup;
 			children = (
 				8D1107320486CEB800E47090 /* loadsim_3_rumses.app */,
+				8409B2961C84B64B004C02F2 /* loadsim_3_rumses copy.app */,
+				8409B2B11C84B736004C02F2 /* loadsim_3_rumses copy 2.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -157,6 +257,8 @@
 				01B97315FEAEA392516A2CEA /* Blocks */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				8409B2971C84B64B004C02F2 /* loadsim_3_rumses copy-Info.plist */,
+				8409B2B21C84B736004C02F2 /* loadsim_3_rumses copy 2-Info.plist */,
 			);
 			name = contour_0;
 			sourceTree = "<group>";
@@ -223,6 +325,46 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		8409B27D1C84B64B004C02F2 /* loadsim_3_rumses copy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8409B2931C84B64B004C02F2 /* Build configuration list for PBXNativeTarget "loadsim_3_rumses copy" */;
+			buildPhases = (
+				8409B27E1C84B64B004C02F2 /* Resources */,
+				8409B27F1C84B64B004C02F2 /* Sources */,
+				8409B2811C84B64B004C02F2 /* Frameworks */,
+				8409B2901C84B64B004C02F2 /* CopyFiles */,
+				8409B2921C84B64B004C02F2 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "loadsim_3_rumses copy";
+			productInstallPath = "$(HOME)/Applications";
+			productName = contour_0;
+			productReference = 8409B2961C84B64B004C02F2 /* loadsim_3_rumses copy.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8409B2981C84B736004C02F2 /* loadsim_3_rumses copy 2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8409B2AE1C84B736004C02F2 /* Build configuration list for PBXNativeTarget "loadsim_3_rumses copy 2" */;
+			buildPhases = (
+				8409B2991C84B736004C02F2 /* Resources */,
+				8409B29A1C84B736004C02F2 /* Sources */,
+				8409B29C1C84B736004C02F2 /* Frameworks */,
+				8409B2AB1C84B736004C02F2 /* CopyFiles */,
+				8409B2AD1C84B736004C02F2 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "loadsim_3_rumses copy 2";
+			productInstallPath = "$(HOME)/Applications";
+			productName = contour_0;
+			productReference = 8409B2B11C84B736004C02F2 /* loadsim_3_rumses copy 2.app */;
+			productType = "com.apple.product-type.application";
+		};
 		8D1107260486CEB800E47090 /* loadsim_3_rumses */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "loadsim_3_rumses" */;
@@ -266,11 +408,27 @@
 			projectRoot = "";
 			targets = (
 				8D1107260486CEB800E47090 /* loadsim_3_rumses */,
+				8409B27D1C84B64B004C02F2 /* loadsim_3_rumses copy */,
+				8409B2981C84B736004C02F2 /* loadsim_3_rumses copy 2 */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		8409B27E1C84B64B004C02F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8409B2991C84B736004C02F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D1107290486CEB800E47090 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -294,9 +452,51 @@
 			shellPath = /bin/sh;
 			shellScript = "install_name_tool -change libtbb.dylib @executable_path/libtbb.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\n";
 		};
+		8409B2921C84B64B004C02F2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "install_name_tool -change libtbb.dylib @executable_path/libtbb.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\n";
+		};
+		8409B2AD1C84B736004C02F2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "install_name_tool -change libtbb.dylib @executable_path/libtbb.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		8409B27F1C84B64B004C02F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8409B2801C84B64B004C02F2 /* cApp.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8409B29A1C84B736004C02F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8409B29B1C84B736004C02F2 /* cApp.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D11072C0486CEB800E47090 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -308,6 +508,122 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		8409B2941C84B64B004C02F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4D6AF7E81C66027000D48A83 /* debug.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = "loadsim_3_rumses copy-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LD_GENERATE_MAP_FILE = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.libcinder.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "loadsim_3_rumses copy";
+				SYMROOT = ./build;
+				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		8409B2951C84B64B004C02F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4D6AF7EA1C66027000D48A83 /* release.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"NDEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = "loadsim_3_rumses copy-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LD_GENERATE_MAP_FILE = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.libcinder.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "loadsim_3_rumses copy";
+				STRIP_INSTALLED_PRODUCT = YES;
+				SYMROOT = ./build;
+				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		8409B2AF1C84B736004C02F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4D6AF7E81C66027000D48A83 /* debug.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = "loadsim_3_rumses copy 2-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LD_GENERATE_MAP_FILE = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.libcinder.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "loadsim_3_rumses copy 2";
+				SYMROOT = ./build;
+				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		8409B2B01C84B736004C02F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4D6AF7EA1C66027000D48A83 /* release.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"NDEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = "loadsim_3_rumses copy 2-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LD_GENERATE_MAP_FILE = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.libcinder.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "loadsim_3_rumses copy 2";
+				STRIP_INSTALLED_PRODUCT = YES;
+				SYMROOT = ./build;
+				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4D6AF7E81C66027000D48A83 /* debug.xcconfig */;
@@ -408,6 +724,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		8409B2931C84B64B004C02F2 /* Build configuration list for PBXNativeTarget "loadsim_3_rumses copy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8409B2941C84B64B004C02F2 /* Debug */,
+				8409B2951C84B64B004C02F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8409B2AE1C84B736004C02F2 /* Build configuration list for PBXNativeTarget "loadsim_3_rumses copy 2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8409B2AF1C84B736004C02F2 /* Debug */,
+				8409B2B01C84B736004C02F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "loadsim_3_rumses" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

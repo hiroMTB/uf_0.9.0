@@ -16,8 +16,6 @@
 #include "Exporter.h"
 #include "Ramses.h"
 #include "mtUtil.h"
-#include "SoundWriter.h"
-#include "Dft.h"
 #include "VboSet.h"
 
 using namespace ci;
