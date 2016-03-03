@@ -16,6 +16,13 @@
 #include "Exporter.h"
 #include "Ramses.h"
 #include "mtUtil.h"
+#include "VboSet.h"
+
+#include <pcl/search/kdtree.h> 
+#include <pcl/search/organized.h>
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl/features/normal_3d.h>
 
 using namespace ci;
 using namespace ci::app;
@@ -36,6 +43,8 @@ public:
     void saveXml();
     void loadXml();
     
+    void feature3d( const vector<vec3> & pos );
+    
     CameraUi camUi;
     Perlin mPln;
     Exporter mExp;
@@ -43,7 +52,7 @@ public:
     vector<Ramses> rms;
     bool bStart = false;
     bool bOrtho = false;
-    bool bFall = true;
+    bool bFall = false;
 
     int eSimType = 0;
     int frame = 100;
@@ -53,7 +62,53 @@ public:
     
     int resolution = 1;
     
+    VboSet norms;
 };
+
+void cApp::feature3d( const vector<vec3> & pos ){
+    
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
+    
+    for( int i=0; i<pos.size(); i++){
+        
+        pcl::PointXYZ point;
+        point.x = pos[i].x;
+        point.y = pos[i].y;
+        point.z = pos[i].z;
+        cloud->points.push_back( point );
+    }
+        
+    // Create the normal estimation class, and pass the input dataset to it
+    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> ne;
+    ne.setInputCloud (cloud);
+    
+    // Create an empty kdtree representation, and pass it to the normal estimation object.
+    // Its content will be filled inside the object, based on the given input dataset (as no other search surface is given).
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ> ());
+    ne.setSearchMethod(tree);
+    
+    // Output datasets
+    pcl::PointCloud<pcl::Normal>::Ptr cloud_normals (new pcl::PointCloud<pcl::Normal>);
+    
+    // Use all neighbors in a sphere of radius 3cm
+    ne.setRadiusSearch (0.03);
+    ne.compute (*cloud_normals);
+
+    const vector<pcl::Normal, Eigen::aligned_allocator<pcl::Normal>> &n = cloud_normals->points;
+
+    cout << pos.size() << "  " << n.size() << endl;
+
+    for(int i=0; i<n.size(); i++){
+        float x = n[i].normal_x;
+        float y = n[i].normal_y;
+        float z = n[i].normal_z;
+        
+        norms.addPos( pos );
+        norms.addPos( vec3(x,y,z) );
+        norms.addCol(ColorAf(x,y,z,1));
+        norms.addCol(ColorAf(x,y,z,1));
+    }
+}
 
 void cApp::setup(){
     setWindowPos( 0, 0 );
@@ -61,12 +116,12 @@ void cApp::setup(){
     float w = 1920;
     float h = 1080*3;
     
-    setWindowSize( w*0.4, h*0.4 );
-    mExp.setup( w, h, 0, 1000-1, GL_RGB, mt::getRenderPath(), 0);
+    setWindowSize( w*0.2, h*0.2 );
+    mExp.setup( w, h, 0, 550-1, GL_RGB, mt::getRenderPath(), 0);
     
     cam = CameraPersp(w, h, 55.0f, 0.1, 1000000 );
     
-    if( 0 ){
+    if(0){
         cam.lookAt( vec3(0,0,800), vec3(0,0,0) );
         cam.setLensShift( 0,0 );
     }else{
@@ -137,6 +192,8 @@ void cApp::draw(){
             rms[rms.size()-i-1].draw();
         }
         
+        norms.draw();
+        
     }mExp.end();
     
     mExp.draw();
@@ -205,11 +262,27 @@ void cApp::makeGui(){
         mExp.startRender();
     };
     
+    function<void(void)> norm = [this](){
+
+        norms.resetCol();
+        norms.resetPos();
+        norms.resetVbo();
+        
+        for( int i=0; i<rms.size(); i++){
+            if(rms[i].bShow){
+                feature3d( rms[i].pos );
+            }
+        }
+        norms.init(GL_LINES);
+    };
+    
     gui->addText( "main" );
     gui->addParam("simType", &eSimType ).min(0).max(4).updateFn( changeSym );
     gui->addParam("start", &bStart );
     gui->addParam("frame", &frame ).updateFn(update);
     gui->addParam("ortho", &bOrtho );
+    gui->addButton("Compute Norm", norm );
+
     gui->addParam("xyz global scale", &Ramses::globalScale ).step(0.01).updateFn(update);
     gui->addParam("r(x) resolution", &Ramses::boxelx, true );
     gui->addParam("theta(y) resolution", &Ramses::boxely, true );

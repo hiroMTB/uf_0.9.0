@@ -51,8 +51,16 @@ HEADER_TBB = $(CINDER_PATH)/blocks/tbb/include
 LIB_PATH_TBB = $(CINDER_PATH)/blocks/tbb/lib/libc++
 LDFLAG_TBB = -ltbb
 
+// PCL
+HEADER_PCL = /usr/local/include/pcl-1.6 /opt/local/include/eigen3 /opt/local/include
+LIB_PATH_PCL =  /opt/local/lib /usr/local/lib
+LDFLAG_PCL =  -lpcl_common -lpcl_io -lpcl_io_ply -lpcl_features -lpcl_search -lpcl_keypoints -lpcl_kdtree -lflann -lflann_cpp -lqhull
+// -lpcl_octree -lpcl_registration -lpcl_sample_consensus -lpcl_apps -lpcl_surface -lpcl_tracking  -lpcl_visualization  -lpcl_filters -lpcl_geometry -lpcl_segmentation
+
 // DEFAULT
 HEADER_DEF = $(HEADER_CINDER) $(HEADER_BOOST) $(HEADER_CV3) $(HEADER_MTB)
 LIB_PATH_DEF = $(LIB_PATH_CINDER) $(LIB_PATH_CV3)
 LDFLAG_DEF_D = $(LDFLAG_CINDER_D) $(LDFLAG_CV3)
 LDFLAG_DEF_R = $(LDFLAG_CINDER_R) $(LDFLAG_CV3)
+
+LD_RUNPATH_SEARCH_PATHS = /usr/local/lib /opt/local/lib
