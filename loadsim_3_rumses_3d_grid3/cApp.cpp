@@ -16,6 +16,7 @@
 #include "Exporter.h"
 #include "Ramses.h"
 #include "mtUtil.h"
+#include "VboSet.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -36,74 +37,58 @@ public:
     void saveXml();
     void loadXml();
     
-    CameraUi camUi;
     Perlin mPln;
     Exporter mExp;
     
     vector<Ramses> rms;
     bool bStart = false;
     bool bOrtho = false;
-    bool bFall = false;
-
-    int eSimType = 0;
     int frame = 100;
-
-    params::InterfaceGlRef gui;
-    CameraPersp cam;
     
-    int resolution = 1;
-    vec3 eye;
+    bool bZsort = false;
+    
+    params::InterfaceGlRef gui;
+    
+    vector<CameraPersp> cams;
+    vector<CameraUi> camUis;
+    
+    VboSet line;
+    
+    int simType = 4;
+    vec3 eye = vec3(900,0,0);
 };
 
 void cApp::setup(){
     setWindowPos( 0, 0 );
-    
+
     float w = 1920;
     float h = 1080;
     
-    setWindowSize( w, h );
-    mExp.setup( w, h, 0, 1000-1, GL_RGB, mt::getRenderPath(), 0);
+    setWindowSize( w*0.6, h*0.6 );
+    mExp.setup( w, h, 0, 1000, GL_RGB, mt::getRenderPath(), 0 );
     
-    cam = CameraPersp(w, h, 55.0f, 0.1, 1000000 );
+    cams.assign(6, CameraPersp());
+    camUis.assign(6, CameraUi());
     
-    if( 0 ){
-        eye = vec3(0,0,800);
-        cam.lookAt( eye, vec3(0,0,0) );
-        cam.setLensShift( 0,0 );
-    }else{
-//        cam.setNearClip(0.100000);
-//        cam.setFarClip(1000000.000000);
-//        cam.setAspectRatio(0.592593);
-//        cam.setFov(55.000000);
-//        cam.setEyePoint(vec3(326.924622,-381.081604,259.431519));
-//        cam.setWorldUp(vec3(0.000000,1.000000,0.000000));
-//        cam.setLensShift(vec2(0.000000,0.000000));
-//        cam.setViewDirection(vec3(-0.578462,0.674288,-0.459040));
-//        cam.lookAt(vec3(326.924622,-381.081604,259.431519)+vec3(-0.578462,0.674288,-0.459040));
-        cam.setNearClip(0.100000);
-        cam.setFarClip(1000000.000000);
-        cam.setAspectRatio(1.777778);
-        cam.setFov(55.000000);
-        cam.setEyePoint(vec3(41.381073,-83.861588,109.938095));
-        cam.setWorldUp(vec3(0.000000,1.000000,0.000000));
-        cam.setLensShift(vec2(0.000000,0.000000));
-        cam.setViewDirection(vec3(-0.286708,0.581035,-0.761706));
-        cam.lookAt(vec3(41.381073,-83.861588,109.938095)+vec3(-0.286708,0.581035,-0.761706));
+    for( int i=0; i<6; i++){
+        cams[i] = CameraPersp(w, h, 55.0f, 1, 100000 );
+        cams[i].lookAt( eye, vec3(0,0,0) );
         
-        eye = vec3(41.381073,-83.861588,109.938095);
+        int col = i%3;
+        int row = i/3;
+        
+        cams[i].setLensShift( -0.666+0.666*col, -0.5+row*1.0);
+        camUis[i].setCamera( &cams[i] );
     }
-    
-    camUi.setCamera( &cam );
     
     mPln.setSeed(123);
     mPln.setOctaves(4);
     
     for( int i=0; i<6; i++){
-        Ramses r(eSimType,i);
-        rms.push_back( r );
+        rms.push_back( Ramses(simType,i) );
     }
-
     makeGui();
+    
     
 #ifdef RENDER
     mExp.startRender();
@@ -111,23 +96,15 @@ void cApp::setup(){
     
 }
 
-void cApp::update(){
 
-    if( !bStart ) return;
-    
-    if( bFall ){
-        
-        // move particle up/down
-        for( int i=0; i<rms.size(); i++){
-            Ramses & rm = rms[i];
-            //rm.move();
-        }
-    
-    }else{
+void cApp::update(){
+    if( bStart ){
         for( int i=0; i<rms.size(); i++){
             if( rms[i].bShow ){
-                rms[i].loadSimData( frame );
-                rms[i].updateVbo(resolution, eye);
+                bool loadok = rms[i].loadSimData( frame );
+                if( loadok ){
+                    rms[i].updateVbo( eye );
+                }
             }
         }
     }
@@ -135,27 +112,36 @@ void cApp::update(){
 
 void cApp::draw(){
     
-    bOrtho ? mExp.beginOrtho( true ) : mExp.begin( camUi.getCamera() ); {
-        
-        gl::clear();    
+    gl::enableAlphaBlending();
+    glPointSize(1);
+    glLineWidth(1);
+    
+    //bOrtho ? mExp.beginOrtho( true ) : mExp.begin( camUi.getCamera() ); {
+    {
+        mExp.bind();
+        gl::clear();
         gl::enableDepthRead();
         gl::enableDepthWrite();
-        gl::enableAlphaBlending();
-        glPointSize(1);
-        glLineWidth(1);
-    
-        if( !mExp.bRender && !mExp.bSnap ){ mt::drawCoordinate(10); }
-        for( int i=0; i<rms.size(); i++){
-            rms[rms.size()-i-1].draw();
+
+        for( int i=0; i<6; i++){
+            gl::pushMatrices();
+            gl::setMatrices( cams[i] );
+            
+            if( !mExp.bRender && !mExp.bSnap ){
+                mt::drawCoordinate(160);
+            }
+            
+            rms[i].draw();
+            
+            gl::popMatrices();
         }
-        
     }mExp.end();
-    
+
     mExp.draw();
-    
+
     if(gui) gui->draw();
 
-    if( bStart && !bFall )frame++;
+    if( bStart)frame++;
 }
 
 void cApp::keyDown( KeyEvent event ) {
@@ -165,39 +151,40 @@ void cApp::keyDown( KeyEvent event ) {
         case 'T': mExp.stopRender();  break;
         case 's': mExp.snapShot();  break;
         case ' ': bStart = !bStart; break;
-        case 'c': mt::printCamera( camUi.getCamera() ); break;
     }
 }
 
 void cApp::mouseDown( MouseEvent event ){
-    camUi.mouseDown( event.getPos() );
+    for( int i=0; i<6; i++ ){
+        camUis[i].mouseDown( event.getPos() );
+    }
 }
 
 void cApp::mouseDrag( MouseEvent event ){
-    camUi.mouseDrag( event.getPos(), event.isLeftDown(), event.isMiddleDown(), event.isRightDown() );
+    for( int i=0; i<6; i++ ){
+        camUis[i].mouseDrag( event.getPos(), event.isLeftDown(), event.isMiddleDown(), event.isRightDown() );
+    }
 }
 
 void cApp::resize(){
-//    CameraPersp & cam = const_cast<CameraPersp&>(camUi.getCamera());
-//    cam.setAspectRatio( getWindowAspectRatio() );
-//    camUi.setCamera( &cam );
+    for( int i=0; i<6; i++ ){
+        CameraPersp & cam = const_cast<CameraPersp&>(camUis[i].getCamera());
+        cam.setAspectRatio( getWindowAspectRatio() );
+        camUis[i].setCamera( &cam );
+    }
 }
 
+
 void cApp::makeGui(){
-    gui = params::InterfaceGl::create( getWindow(), Ramses::simType[eSimType], vec2(300, getWindowHeight()) );
+    gui = params::InterfaceGl::create( getWindow(), "Ramses", vec2(300, getWindowHeight()) );
     gui->setOptions( "", "position=`0 0` valueswidth=100" );
     
     function<void(void)> update = [&](){
-        for( int i=0; i<rms.size(); i++){ rms[i].updateVbo(resolution, eye); }
-    };
-    
-    function<void(void)> changeSym = [this](){
         for( int i=0; i<rms.size(); i++){
-            rms[i].eSimType = eSimType;
-            rms[i].loadSimData(frame);
-            rms[i].updateVbo(resolution, eye);
+            rms[i].updateVbo(eye);
         }
     };
+    
     
     function<void(void)> sx = [this](){
         saveXml();
@@ -206,90 +193,88 @@ void cApp::makeGui(){
     function<void(void)> ld = [this](){
         loadXml();
         for( int i=0; i<rms.size(); i++){
-            rms[i].eSimType = eSimType;
+            rms[i].eSimType = simType;
             rms[i].loadSimData(frame);
-            rms[i].updateVbo(resolution, eye);
+            rms[i].updateVbo(eye);
         }
     };
-    
+
     function<void(void)> ren = [this](){
         bStart = true;
         mExp.startRender();
     };
     
     gui->addText( "main" );
-    gui->addParam("simType", &eSimType ).min(0).max(4).updateFn( changeSym );
     gui->addParam("start", &bStart );
     gui->addParam("frame", &frame ).updateFn(update);
     gui->addParam("ortho", &bOrtho );
     gui->addParam("xyz global scale", &Ramses::globalScale ).step(0.01).updateFn(update);
-    gui->addParam("r(x) resolution", &Ramses::boxelx, true );
-    gui->addParam("theta(y) resolution", &Ramses::boxely, true );
+    //gui->addParam("r(x) resolution", &Ramses::boxelx, true );
+    //gui->addParam("theta(y) resolution", &Ramses::boxely, true );
     gui->addButton("save XML", sx );
     gui->addButton("load XML", ld );
-    gui->addButton("start render", ren );
-    
+    gui->addButton("start Render", ren );
+
     gui->addSeparator();
     
     for( int i=0; i<6; i++){
-        string p = Ramses::prm[i];
-        //gui->addText( p );
+        string p = to_string(simType) + "_"+  Ramses::prm[i];
         
-        //function<void(void)> up = bind(&Ramses::updateVbo, &rms[i]);
         function<void(void)> up = [i, this](){
-            rms[i].updateVbo(resolution,eye);
+            rms[i].updateVbo(eye);
         };
         
         function<void(void)> up2 = [i, this](){
             rms[i].loadSimData(this->frame);
-            rms[i].updateVbo(resolution,eye);
+            rms[i].updateVbo(eye);
         };
         
         gui->addParam(p+" show", &rms[i].bShow ).group(p).updateFn(up2);
-        gui->addParam(p+" polar coordinate", &rms[i].bPolar ).group(p).updateFn(up2);
+        //gui->addParam(p+" polar coordinate", &rms[i].bPolar ).group(p).updateFn(up2);
+        
         gui->addParam(p+" Auto Min Max", &rms[i].bAutoMinMax ).group(p).updateFn(up);
         gui->addParam(p+" in min", &rms[i].in_min).step(0.05f).group(p).updateFn(up);
         gui->addParam(p+" in max", &rms[i].in_max).step(0.05f).group(p).updateFn(up);
         
         gui->addParam(p+" z extrude", &rms[i].extrude).step(1.0f).group(p).updateFn(up);
-        gui->addParam(p+" x offset", &rms[i].xoffset).step(1.0f).group(p).updateFn(up);
-        gui->addParam(p+" y offset", &rms[i].yoffset).step(1.0f).group(p).updateFn(up);
-        gui->addParam(p+" z offset", &rms[i].zoffset).step(1.0f).group(p).updateFn(up);
+        //gui->addParam(p+" x offset", &rms[i].xoffset).step(1.0f).group(p).updateFn(up);
+        //gui->addParam(p+" y offset", &rms[i].yoffset).step(1.0f).group(p).updateFn(up);
+        //gui->addParam(p+" z offset", &rms[i].zoffset).step(1.0f).group(p).updateFn(up);
         
         gui->addParam(p+" xy scale", &rms[i].scale).step(1.0f).group(p).updateFn(up);
         //gui->addParam(p+" visible thresh", &rms[i].visible_thresh).step(0.005f).min(0.0f).max(1.0f).group(p).updateFn(up);
         gui->addParam(p+" log", &rms[i].eStretch).step(1).min(0).max(1).group(p).updateFn(up2);
-        gui->addParam(p+" inAngle", &rms[i].inAngle).step(1).min(-180).max(180).group(p).updateFn(up);
-        gui->addParam(p+" outAngle", &rms[i].outAngle).step(1).min(-180).max(180).group(p).updateFn(up);
-        gui->addParam(p+" offsetRotateAngle", &rms[i].offsetRotateAngle).step(0.01).group(p).updateFn(up);
-        gui->addParam(p+" rotateSpeed", &rms[i].rotateSpeed).step(0.01).group(p).updateFn(up);
         
         // read only
+        //gui->addParam(p+" r(x) resolution", &rms[eSimType][i].boxelx, true );
+        //gui->addParam(p+" theta(y) resolution", &rms[eSimType][i].boxely, true );
+        
         //gui->addParam(p+" visible rate(%)", &rms[i].visible_rate, true ).group(p);
         //gui->addParam(p+" num particle", &rms[i].nParticle, true).group(p);
         
         gui->addSeparator();
+        
     }
 }
 
 void cApp::loadXml(){
     
-    fs::path p = "gui.xxml";
+    fs::path p = "gui.xml";
     if( !fs::is_empty( p ) ){
         XmlTree xml( loadFile( p ) );
         XmlTree mn = xml.getChild("gui_setting/main");
-        eSimType =  (mn/"simType").getValue<int>();
-        //frame =  (mn/"frame").getValue<int>();
+        frame =  (mn/"frame").getValue<int>();
         bOrtho =  (mn/"ortho").getValue<bool>();
         Ramses::globalScale =  (mn/"xyz_global_scale").getValue<float>();
-        Ramses::boxelx =  (mn/"r_resolution").getValue<float>();
-        Ramses::boxely =  (mn/"theta_resolution").getValue<float>();
+        //Ramses::boxelx =  (mn/"r_resolution").getValue<float>();
+        //Ramses::boxely =  (mn/"theta_resolution").getValue<float>();
+        
+        XmlTree sim = xml.getChild( "gui_setting/simType_" + to_string(simType) );
         
         for( int i=0; i<rms.size(); i++){
             Ramses & r = rms[i];
             string name = Ramses::prm[i];
-            XmlTree prm;
-            prm = xml.getChild("gui_setting/"+name);
+            XmlTree prm = sim.getChild(name);
             r.bShow = (prm/"show").getValue<bool>();
             r.bPolar = (prm/"polar").getValue<bool>(true);
             r.bAutoMinMax = (prm/"Auto_Min_Max").getValue<bool>();
@@ -301,10 +286,6 @@ void cApp::loadXml(){
             r.zoffset = (prm/"z_offset").getValue<float>();
             r.scale = (prm/"xy_scale").getValue<float>();
             r.eStretch = (prm/"log").getValue<float>();
-            r.inAngle = (prm/"inAngle").getValue<float>();
-            r.outAngle = (prm/"outAngle").getValue<float>();
-            r.offsetRotateAngle = (prm/"offsetRotateAngle").getValue<float>();
-            r.rotateSpeed = (prm/"rotateSpeed").getValue<float>();
         }
     }
 }
@@ -315,14 +296,16 @@ void cApp::saveXml(){
     xml.setTag("gui_setting");
     mn.setTag("main");
     
-    mn.push_back( XmlTree("simType", to_string(eSimType)) );
-    //mn.push_back( XmlTree("frame", to_string(frame) ));
+    mn.push_back( XmlTree("frame", to_string(frame) ));
     mn.push_back( XmlTree("ortho", to_string(bOrtho) ));
     mn.push_back( XmlTree("xyz_global_scale", to_string(Ramses::globalScale) ));
-    mn.push_back( XmlTree("r_resolution", to_string(Ramses::boxelx) ));
-    mn.push_back( XmlTree("theta_resolution", to_string(Ramses::boxely) ));
+    //mn.push_back( XmlTree("r_resolution", to_string(Ramses::boxelx) ));
+    //mn.push_back( XmlTree("theta_resolution", to_string(Ramses::boxely) ));
     
     xml.push_back( mn );
+    
+    XmlTree sim;
+    sim.setTag("simType_"+to_string(simType));
     
     for( int i=0; i<rms.size(); i++){
         Ramses & r = rms[i];
@@ -340,16 +323,13 @@ void cApp::saveXml(){
         prm.push_back( XmlTree("z_offset", to_string(r.zoffset)));
         prm.push_back( XmlTree("xy_scale", to_string( r.scale )));
         prm.push_back( XmlTree("log", to_string( r.eStretch )));
-        prm.push_back( XmlTree("inAngle", to_string(r.inAngle)));
-        prm.push_back( XmlTree("outAngle", to_string(r.outAngle)));
-        prm.push_back( XmlTree("offsetRotateAngle", to_string(r.offsetRotateAngle)));
-        prm.push_back( XmlTree("rotateSpeed", to_string(r.rotateSpeed)));
-        xml.push_back( prm );
+        sim.push_back( prm );
     }
-    
-    DataTargetRef file = DataTargetPath::createRef( "gui.xxml" );
+    xml.push_back(sim);
+
+    DataTargetRef file = DataTargetPath::createRef( "gui.xml" );
     xml.write( file );
-    
+
 }
 
 CINDER_APP( cApp, RendererGl( RendererGl::Options().msaa( 0 )) )

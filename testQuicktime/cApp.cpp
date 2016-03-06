@@ -14,9 +14,7 @@ using namespace std;
 
 class QTimeAdvApp : public App {
   public:
-	void prepareSettings( Settings *settings );
 	void setup();
-
 	void keyDown( KeyEvent event );
 
 	void update();
@@ -34,17 +32,13 @@ class QTimeAdvApp : public App {
 };
 
 
-void QTimeAdvApp::prepareSettings( Settings *settings )
-{
-	settings->setWindowSize( 640, 480 );
-	settings->setFullScreen( false );
-	settings->setResizable( true );
-}
-
 void QTimeAdvApp::setup(){
 
-    srand( 133 );
-	fs::path moviePath = getOpenFilePath();
+    setWindowPos(0, 0);
+    setWindowSize(1920, 1080);
+    setFrameRate(25);
+    
+    fs::path moviePath = getOpenFilePath();
     if( ! moviePath.empty() ){
         
 #ifdef USE_MovieGlRef
@@ -77,8 +71,8 @@ void QTimeAdvApp::update()
         mSurface = mov->getSurface();
 #endif
         mov->seekToFrame( getElapsedFrames());
+        //mov->stepForward();
     }
-    
 }
 
 void QTimeAdvApp::draw()
@@ -102,12 +96,14 @@ void QTimeAdvApp::draw()
         gl::draw( texture, Rectf( x, y, x + drawWidth, y + drawHeight ) );
     }
     drawOffsetX += getWindowWidth() * relativeWidth;
-
 #else
     if( ( ! mov ) || ( ! mSurface ) )
         return;
   	gl::draw( gl::Texture::create( *mSurface ) );
 #endif
+    
+    gl::color(1, 1, 1);
+    gl::drawString("fps: " + to_string(getAverageFps()), vec2(10,10) );
     
 }
 

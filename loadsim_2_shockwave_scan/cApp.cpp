@@ -1,4 +1,4 @@
-//#define RENDER
+#define RENDER
 
 #include "cinder/app/App.h"
 #include "cinder/Rand.h"
@@ -58,6 +58,7 @@ public:
     void resize();
     void loadSimulationData( int idump );
     void setupGui();
+    void glSettings();
     
     int boxelx, boxely, boxelz;
     
@@ -65,14 +66,16 @@ public:
     CameraPersp cam;
     Perlin mPln;
     
-    Exporter mExp;
-    Exporter mExpScan;
-    Exporter mExpScanSum;
+    Exporter mExpAll;
+    Exporter mExpData;
+    Exporter mExpBox;
+    Exporter mExpFace;
+    Exporter mExpSide;
     
     VboSet vbo_ptcl;
     
     gl::VboMeshRef bridge;
-    int idump = 24 - 50 -12;
+    int idump = 24 - 62;
     int idumpMax = 524;
     
     bool bStart = false;
@@ -108,14 +111,24 @@ public:
     
     vector<vector<float>> hist;
     
+    const float threshold = 0.7; //-0.15f;
+
 };
 
 void cApp::setup(){
     setWindowPos( 0, 0 );
+
+#ifdef RENDER
+    setWindowSize( 1920*0.25, 1080*0.25 );
+#else
     setWindowSize( 1920, 1080 );
-    mExp.setup( 1920, 1080, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "3d_");
-    mExpScan.setup( 1920, 1080, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "scan_");
-    mExpScanSum.setup( 1920, 1080, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "scanSum_");
+#endif
+    
+    //mExpAll.setup( 1920, 1080, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "all/");
+    //mExpData.setup( 1920, 1080, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "data/");
+    //mExpBox.setup( 1920, 1080, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "box/");
+    //mExpFace.setup( 1920, 1080, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "face/");
+    mExpSide.setup( 1920, 1080, 0, 1000, GL_RGB, mt::getRenderPath(), 0, "side/");
 
     cam = CameraPersp(1920, 1080, fov, 1, 100000 );
     cam.lookAt( eye, vec3(0,0,0) );
@@ -137,9 +150,11 @@ void cApp::setup(){
     
 #ifdef RENDER
     bStart = true;
-    mExp.startRender();
-    mExpScan.startRender();
-    mExpScanSum.startRender();
+    mExpAll.startRender();
+    mExpData.startRender();
+    mExpFace.startRender();
+    mExpBox.startRender();
+    mExpSide.startRender();
 #endif
 }
 
@@ -290,8 +305,6 @@ void cApp::loadSimulationData( int idump){
             }
         }else{
             
-            //float threshold = 0.0101f;
-            float threshold = 0.7f;
             if( threshold<rhof){
                 vec3 noise = mPln.dfBm(x, y, z)*0.3f;
                 vec3 v = vec3(x, y, z) + vec3(-200,-200,-200) + noise;
@@ -305,7 +318,8 @@ void cApp::loadSimulationData( int idump){
                         break;
                         
                     case 1:
-                        c = ColorAf( 0.3+rhof*0.5f, 0.0f, 0.0f, 1.0f );
+                        //c = ColorAf( 0.3+rhof, 0.1f, 0.1f, 0.3+alpha*2.0f );
+                        c.set(CM_HSV, vec4(hue, 1.0f, 1.0f, 0.95f) );
                         break;
                         
                     case 2:
@@ -356,13 +370,21 @@ void cApp::loadSimulationData( int idump){
     //  we need sort depends on position between eye and particle pos.
     //  otherwise point is rendered with dark color from behind.
     //
+//    sort(
+//         tp.begin(),
+//         tp.end(),
+//         []( const Particle& l, const Particle& r){
+//             return l.dist > r.dist;
+//         }
+//    );
+
     sort(
          tp.begin(),
          tp.end(),
          []( const Particle& l, const Particle& r){
-             return l.dist > r.dist;
+             return l.pos.y > r.pos.y;
          }
-    );
+         );
     
     //
     //  make vbo
@@ -385,26 +407,26 @@ void cApp::loadSimulationData( int idump){
 
         vbo_ptcl.init(GL_POINTS);
 
-        // face
-        for( int i=0; i<tp_s.size(); i++){
-            Particle & p = tp_s[i];
-            vScanFace.addPos( p.pos );
-            vScanFace.addCol( p.col );
-        }
-        vScanFace.init(GL_POINTS);
-
-        // sum
-        for( int i=0; i<hist.size(); i++){
-            for( int j=0; j<hist[i].size(); j++){
-                float x = i-200;
-                float y = j-200;
-                float d = hist[i][j] * 0.01f;
-                vScanSum.addPos(vec3(-x,y,0) );
-                //vScanSum.addCol(ColorAf(CM_HSV, d, 1.0f, 1.0f, 0.2f+d) );
-                vScanSum.addCol(ColorAf(d, d, d, 0.1+d) );
-            }
-        }
-        vScanSum.init(GL_POINTS);
+//        // face
+//        for( int i=0; i<tp_s.size(); i++){
+//            Particle & p = tp_s[i];
+//            vScanFace.addPos( p.pos );
+//            vScanFace.addCol( p.col );
+//        }
+//        vScanFace.init(GL_POINTS);
+//
+//        // sum
+//        for( int i=0; i<hist.size(); i++){
+//            for( int j=0; j<hist[i].size(); j++){
+//                float x = i-200;
+//                float y = j-200;
+//                float d = hist[i][j] * 0.01f;
+//                vScanSum.addPos(vec3(-x,y,0) );
+//                //vScanSum.addCol(ColorAf(CM_HSV, d, 1.0f, 1.0f, 0.2f+d) );
+//                vScanSum.addCol(ColorAf(d, d, d, 0.1+d) );
+//            }
+//        }
+//        vScanSum.init(GL_POINTS);
         
         int totalPoints = vbo_ptcl.getPos().size();
         
@@ -413,82 +435,127 @@ void cApp::loadSimulationData( int idump){
     }
 }
 
+void cApp::glSettings(){
+    gl::clear( ColorAf(0,0,0,1) );
+    gl::enableAlphaBlending();
+    gl::enableDepthRead();
+    gl::enableDepthWrite();
+    glLineWidth( 1 );
+    glPointSize( 1 );
+}
+
 void cApp::draw(){
     
     angle2 = angleSpd2*idump;
     
-    mExp.begin( camUi.getCamera() );{
-        
-        gl::clear( ColorAf(0,0,0,1) );
-
-        gl::enableAlphaBlending();
-        gl::enableDepthRead();
-        gl::enableDepthWrite();
+    if(0){
+        mExpAll.begin( camUi.getCamera() );{
+            
+            glSettings();
+            vbo_ptcl.draw();
+            
+            {
+                gl::rotate( toRadians(angle1), axis1 );
+                gl::rotate( toRadians(angle2), axis2 );
+                
+                if( !mExpAll.bSnap && !mExpAll.bRender ){
+                    mt::drawCoordinate( -200 );
+                }
+                
+                float w = 0.75f;
+                gl::color(w,w,w);
+                gl::drawStrokedCube( vec3(0,0,0), vec3(400,400,400) );
+                
+                if(scan>0){
+                    // draw scan face
+                    float z = 200.0f-400.0f*scan-1;
+                    z = constrain(z, -200.0f, 200.0f);
+                    gl::translate(0,0,z);
+                    gl::color(1, 1, 1);
+                    float rate = 1.05f;
+                    gl::drawStrokedRect(Rectf(vec2(-200, -200)*rate, vec2(200, 200)*rate));
+                    //gl::color(0.25f,0.25f, 0.25f, 0.4f);
+                    //gl::drawSolidRect(Rectf(vec2(-200, -200)*rate, vec2(200, 200)*rate));
+                }
+            }
+            gl::disableDepthWrite();
+            gl::disableDepthRead();
+        }mExpAll.end();
+    }
     
-        glLineWidth( 1 );
+    // data
+    if(0){
+        mExpData.begin( camUi.getCamera() );{
+            glSettings();
+            vbo_ptcl.draw();
+            gl::disableDepthWrite();
+            gl::disableDepthRead();
+        }mExpData.end();
+    }
 
-        glPointSize( 1 );
-        vbo_ptcl.draw();
-        
-        {
+    // box
+    if(0){
+        mExpBox.begin( camUi.getCamera() );{
+            glSettings();
             gl::rotate( toRadians(angle1), axis1 );
             gl::rotate( toRadians(angle2), axis2 );
-            
-            if( !mExp.bSnap && !mExp.bRender ){
-                mt::drawCoordinate( -200 );
-            }
-
             float w = 0.75f;
             gl::color(w,w,w);
             gl::drawStrokedCube( vec3(0,0,0), vec3(400,400,400) );
-
+            gl::disableDepthWrite();
+            gl::disableDepthRead();
+            
+        }mExpBox.end();
+    }
+    
+    // face
+    if(0){
+        mExpFace.begin( camUi.getCamera() );{
+            glSettings();
+            
+            gl::rotate( toRadians(angle1), axis1 );
+            gl::rotate( toRadians(angle2), axis2 );
             if(scan>0){
-                // draw scan face
-                gl::translate(0,0,200.0f-400.0f*scan);
+                gl::translate(0,0,200.0f-400.0f*scan-1);
                 gl::color(1, 1, 1);
-                gl::drawStrokedRect(Rectf(vec2(-200, -200), vec2(200, 200)));
-                gl::color(0.25f,0.25f, 0.25f, 0.4f);
-                gl::drawSolidRect(Rectf(vec2(-200, -200), vec2(200, 200)));
+                float rate = 1.05f;
+                gl::drawStrokedRect(Rectf(vec2(-200, -200)*rate, vec2(200, 200)*rate));
             }
-        }
+            gl::disableDepthWrite();
+            gl::disableDepthRead();
+            
+        }mExpFace.end();
+    }
+    
+    // side
+    mExpSide.beginOrtho(true, false);{
+        glSettings();
+
+        gl::rotate( toRadians(90.0f), 1, 0, 0 );
+        gl::scale(1.5,1.5,1.5);
+        gl::pushMatrices();
+        gl::rotate( toRadians(-angle2), axis2 );
+        gl::rotate( toRadians(-angle1), axis1 );
+        vbo_ptcl.draw();
+        gl::popMatrices();
+        float w = 0.75f;
+        gl::color(w,w,w);
+        gl::drawStrokedCube( vec3(0,0,0), vec3(400,400,400) );
         
+        if(scan>0){
+            // draw scan face
+            float z = 200.0f-400.0f*scan-1;
+            z = constrain(z, -200.0f, 200.0f);
+            gl::translate(0,0,z);
+            gl::color(1, 1, 1);
+            float rate = 1.05f;
+            gl::drawStrokedRect(Rectf(vec2(-200, -200)*rate, vec2(200, 200)*rate));
+        }
         gl::disableDepthWrite();
         gl::disableDepthRead();
-        
-        
-    }mExp.end();
+    }mExpSide.end();
     
-    mExpScan.beginOrtho(true, false);{
-        gl::clear();
-        gl::rotate(toRadians(-90.0f));
-        gl::rotate(toRadians(180.0f), 1, 0, 0);
-        //gl::scale(2.0,2.0,1);
-        gl::scale(1.5, 1.5, 1);
-        //mt::drawCoordinate( -200 );
-        vScanFace.draw();
-        gl::translate(0.5, 0.5, 0);
-        vScanFace.draw();
-    }
-    mExpScan.end();
-
-    mExpScanSum.beginOrtho(true, false);{
-        gl::clear();
-        gl::pointSize(2);
-        gl::scale(1.5, 1.5, 1);
-        vScanSum.draw();
-        gl::translate(0.3, 0, 0);
-        vScanSum.draw();
-
-        gl::translate(0, 0.3, 0);
-        vScanSum.draw();
-
-        float x = -200.0f+400.0f*scan+1;
-        gl::color(0.7, 0.7,0.7,0.7);
-        gl::drawLine(vec3(x, -250, 0), vec3(x, 250, 0));
-    }mExpScanSum.end();
-    
-    mExp.draw();
-    //mExpScan.draw();
+    mExpSide.draw();
     gui->draw();
 }
 
@@ -496,9 +563,11 @@ void cApp::keyDown( KeyEvent event ) {
     char key = event.getChar();
     switch (key) {
         case 's':{
-            mExp.snapShot("idump_"+toString(idump)+"_3d.png");
-            mExpScan.snapShot("idump_"+toString(idump)+"_scanFace.png");
-            mExpScanSum.snapShot("idump_"+toString(idump)+"_scanFaceSum.png");
+            mExpAll.snapShot("all_"+toString(idump)+".png");
+            //mExpData.snapShot("data_"+toString(idump)+".png");
+            //mExpFace.snapShot("face_"+toString(idump)+".png");
+            //mExpBox.snapShot("box_"+toString(idump)+".png");
+            mExpSide.snapShot("side_"+toString(idump)+".png");
             break;
         }
         case ' ': bStart = !bStart; break;
@@ -514,9 +583,6 @@ void cApp::mouseDrag( MouseEvent event ){
 }
 
 void cApp::resize(){
-    CameraPersp & cam = const_cast<CameraPersp&>(camUi.getCamera());
-    cam.setAspectRatio( mExp.mFbo->getAspectRatio());
-    camUi.setCamera( &cam );
 }
 
 CINDER_APP( cApp, RendererGl(RendererGl::Options().msaa( 0 )) )

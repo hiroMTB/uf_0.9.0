@@ -17,7 +17,7 @@
 		0097E3E50F3E9819005A4392 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0097E3E40F3E9819005A4392 /* QuickTime.framework */; };
 		00B9955A1B128DF400A5C623 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995581B128DF400A5C623 /* IOKit.framework */; };
 		00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995591B128DF400A5C623 /* IOSurface.framework */; };
-		4D4367FC1C4D3FE4004CC659 /* QTimeAdvApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D4367FB1C4D3FE4004CC659 /* QTimeAdvApp.cpp */; };
+		4D6918A71C8B8F4600B3A27C /* cApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D6918A61C8B8F4600B3A27C /* cApp.cpp */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		53E3CDFC0E86099300238D2B /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53E3CDFB0E86099300238D2B /* Carbon.framework */; };
@@ -39,7 +39,7 @@
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		4D4367FB1C4D3FE4004CC659 /* QTimeAdvApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QTimeAdvApp.cpp; sourceTree = "<group>"; };
+		4D6918A61C8B8F4600B3A27C /* cApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cApp.cpp; sourceTree = "<group>"; };
 		4DCCC9E21C4D46B3000A1A59 /* debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = _misc/debug.xcconfig; sourceTree = "<group>"; };
 		4DCCC9E31C4D46B3000A1A59 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = _misc/Info.plist; sourceTree = "<group>"; };
 		4DCCC9E41C4D46B3000A1A59 /* release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = release.xcconfig; path = _misc/release.xcconfig; sourceTree = "<group>"; };
@@ -148,7 +148,7 @@
 		4DCCC9E91C4D46F8000A1A59 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				4D4367FB1C4D3FE4004CC659 /* QTimeAdvApp.cpp */,
+				4D6918A61C8B8F4600B3A27C /* cApp.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -216,7 +216,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D4367FC1C4D3FE4004CC659 /* QTimeAdvApp.cpp in Sources */,
+				4D6918A71C8B8F4600B3A27C /* cApp.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
