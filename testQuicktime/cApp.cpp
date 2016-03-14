@@ -29,8 +29,10 @@ class QTimeAdvApp : public App {
     SurfaceRef mSurface;
 #endif
     
+    
+    
+    
 };
-
 
 void QTimeAdvApp::setup(){
 
@@ -38,13 +40,19 @@ void QTimeAdvApp::setup(){
     setWindowSize(1920, 1080);
     setFrameRate(25);
     
-    fs::path moviePath = getOpenFilePath();
-    if( ! moviePath.empty() ){
+    gl::enableVerticalSync();
+    
+    //fs::path moviePath = getOpenFilePath();
+    DataSourceRef ref = loadResource("test_7.1ch.mov");
+    fs::path path = ref->getFilePath();
+    cout << path << endl;
+    
+    if( 1 ){ //! moviePath.empty() ){
         
 #ifdef USE_MovieGlRef
-        mov = qtime::MovieGl::create( moviePath );
+        mov = qtime::MovieGl::create( path );
 #else
-        mov = qtime::MovieSurface::create( moviePath );
+        mov = qtime::MovieSurface::create( ref->getFilePath() ); //moviePath );
 #endif
         console() << "Dimensions:" << mov->getWidth() << " x " << mov->getHeight() << std::endl;
         console() << "Duration:  " << mov->getDuration() << " seconds" << std::endl;
@@ -70,8 +78,8 @@ void QTimeAdvApp::update()
 #else
         mSurface = mov->getSurface();
 #endif
-        mov->seekToFrame( getElapsedFrames());
-        //mov->stepForward();
+        //mov->seekToFrame( getElapsedFrames());
+        mov->stepForward();
     }
 }
 
