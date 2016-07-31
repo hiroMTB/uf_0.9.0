@@ -58,11 +58,15 @@ public:
 void cApp::setup(){
     setWindowPos( 0, 0 );
     
-    float w = 1920;
-    float h = 1080;
+    //float w = 1920;
+    //float h = 3240;
+
+    float w = 3840;
+    float h = 2160;
+    float wScale = 1440.0f/h;
     
-    setWindowSize( w, h );
-    mExp.setup( w, h, 0, 1000-1, GL_RGB, mt::getRenderPath(), 0);
+    setWindowSize( w*wScale, h*wScale );
+    mExp.setup( w, h, 0, 1100-1, GL_RGB, mt::getRenderPath(), 0);
     
     cam = CameraPersp(w, h, 55.0f, 0.1, 1000000 );
     
@@ -71,26 +75,17 @@ void cApp::setup(){
         cam.lookAt( eye, vec3(0,0,0) );
         cam.setLensShift( 0,0 );
     }else{
-//        cam.setNearClip(0.100000);
-//        cam.setFarClip(1000000.000000);
-//        cam.setAspectRatio(0.592593);
-//        cam.setFov(55.000000);
-//        cam.setEyePoint(vec3(326.924622,-381.081604,259.431519));
-//        cam.setWorldUp(vec3(0.000000,1.000000,0.000000));
-//        cam.setLensShift(vec2(0.000000,0.000000));
-//        cam.setViewDirection(vec3(-0.578462,0.674288,-0.459040));
-//        cam.lookAt(vec3(326.924622,-381.081604,259.431519)+vec3(-0.578462,0.674288,-0.459040));
+        eye = vec3(326.924622,-381.081604,259.431519) * 0.75f;
+        
         cam.setNearClip(0.100000);
         cam.setFarClip(1000000.000000);
-        cam.setAspectRatio(1.777778);
+        cam.setAspectRatio(w/h);
         cam.setFov(55.000000);
-        cam.setEyePoint(vec3(41.381073,-83.861588,109.938095));
+        cam.setEyePoint( eye );
         cam.setWorldUp(vec3(0.000000,1.000000,0.000000));
         cam.setLensShift(vec2(0.000000,0.000000));
-        cam.setViewDirection(vec3(-0.286708,0.581035,-0.761706));
-        cam.lookAt(vec3(41.381073,-83.861588,109.938095)+vec3(-0.286708,0.581035,-0.761706));
-        
-        eye = vec3(41.381073,-83.861588,109.938095);
+        cam.setViewDirection(vec3(-0.578462,0.674288,-0.459040));
+        cam.lookAt(eye+vec3(-0.578462,0.674288,-0.459040));
     }
     
     camUi.setCamera( &cam );
@@ -143,7 +138,7 @@ void cApp::draw(){
         gl::enableAlphaBlending();
         glPointSize(1);
         glLineWidth(1);
-    
+        gl::rotate( toRadians(90.0f), eye);
         if( !mExp.bRender && !mExp.bSnap ){ mt::drawCoordinate(10); }
         for( int i=0; i<rms.size(); i++){
             rms[rms.size()-i-1].draw();
